@@ -12,6 +12,6 @@ namespace KooliProjekt.Data
         public DateTime PayBy {get; set;}
         public bool PayStatus {get; set;}
         public int CustomerId {get;set;}
-        public Customer Customer;
+        public Customer Customer {get;set;}
     }
 }

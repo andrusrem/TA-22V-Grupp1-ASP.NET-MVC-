@@ -7,6 +7,9 @@ namespace KooliProjekt.Data
         public string Model {get; set;}
         public string Manufacturer {get; set;}
         public string CarNum {get; set;}
+        public string CarName {
+            get { return Brand + " " + Model + " " + CarNum; }
+        }
         public CarType CarType {get;set;}
         public decimal DistancePrice {get;set;}
         public decimal TimePrice {get;set;}
