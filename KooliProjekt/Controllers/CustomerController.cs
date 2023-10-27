@@ -25,7 +25,7 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Customer/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null || _context.Customers == null)
             {
@@ -42,30 +42,9 @@ namespace KooliProjekt.Controllers
             return View(customer);
         }
 
-        // GET: Customer/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Customer/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Email,Name,Phone,Address,City,Postcode,Country")] Customer customer)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(customer);
-        }
-
+        
         // GET: Customer/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null || _context.Customers == null)
             {
@@ -85,18 +64,29 @@ namespace KooliProjekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Email,Name,Phone,Address,City,Postcode,Country")] Customer customer)
+        public async Task<IActionResult> Edit(string id, Customer customer)
         {
             if (id != customer.Id)
             {
                 return NotFound();
             }
 
+            var customerDb = _context.Customers.FirstOrDefault(x => x.Id ==id);
+            customerDb.Name = customer.Name;
+            customerDb.UserName = customer.UserName;
+            customerDb.Phone = customer.Phone;
+            customerDb.Address = customer.Address;
+            customerDb.City = customer.City;
+            customerDb.Postcode = customer.Postcode;
+            customerDb.Country = customer.Country;
+            
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(customer);
+                    _context.Update(customerDb);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -116,7 +106,7 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Customer/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null || _context.Customers == null)
             {
@@ -136,7 +126,7 @@ namespace KooliProjekt.Controllers
         // POST: Customer/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             if (_context.Customers == null)
             {
@@ -152,7 +142,7 @@ namespace KooliProjekt.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int id)
+        private bool CustomerExists(string id)
         {
           return _context.Customers.Any(e => e.Id == id);
         }

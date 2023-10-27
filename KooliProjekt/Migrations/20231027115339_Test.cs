@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace KooliProjekt.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Test : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,12 @@ namespace KooliProjekt.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Phone = table.Column<string>(type: "TEXT", nullable: true),
+                    Address = table.Column<string>(type: "TEXT", nullable: true),
+                    City = table.Column<string>(type: "TEXT", nullable: true),
+                    Postcode = table.Column<string>(type: "TEXT", nullable: true),
+                    Country = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -48,6 +54,25 @@ namespace KooliProjekt.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Brand = table.Column<string>(type: "TEXT", nullable: true),
+                    Model = table.Column<string>(type: "TEXT", nullable: true),
+                    Manufacturer = table.Column<string>(type: "TEXT", nullable: true),
+                    CarNum = table.Column<string>(type: "TEXT", nullable: true),
+                    CarType = table.Column<int>(type: "INTEGER", nullable: false),
+                    DistancePrice = table.Column<decimal>(type: "TEXT", nullable: false),
+                    TimePrice = table.Column<decimal>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,6 +181,64 @@ namespace KooliProjekt.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Invoices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    WhenTaken = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    GivenBack = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DistanceDriven = table.Column<decimal>(type: "TEXT", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "TEXT", nullable: false),
+                    PayBy = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PayStatus = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CustomerId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CustomerId1 = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invoices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invoices_AspNetUsers_CustomerId1",
+                        column: x => x.CustomerId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Invoices_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    EstimatedPrice = table.Column<decimal>(type: "TEXT", nullable: false),
+                    CustomerId = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_AspNetUsers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Orders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -192,6 +275,26 @@ namespace KooliProjekt.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoices_CustomerId1",
+                table: "Invoices",
+                column: "CustomerId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoices_ProductId",
+                table: "Invoices",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_CustomerId",
+                table: "Orders",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_ProductId",
+                table: "Orders",
+                column: "ProductId");
         }
 
         /// <inheritdoc />
@@ -213,10 +316,19 @@ namespace KooliProjekt.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Invoices");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Products");
         }
     }
 }

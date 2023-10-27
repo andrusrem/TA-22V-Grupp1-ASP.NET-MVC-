@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@using KooliProjekt.Data
+@inject SignInManager<Customer> SignInManager
+@inject UserManager<Customer> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {

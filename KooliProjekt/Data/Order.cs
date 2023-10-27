@@ -9,7 +9,7 @@ namespace KooliProjekt
         public Product Product {get;set;}
         
         public decimal EstimatedPrice {get; set;} //Calculated from DistancePrice and TimePrice in Product
-        public int CustomerId {get;set;}
+        public string CustomerId {get;set;}
         public Customer Customer {get;set;}
     }
 }
