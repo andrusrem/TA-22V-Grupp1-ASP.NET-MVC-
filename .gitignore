@@ -6,7 +6,7 @@
 # User-specific files
 *.rsuser
 *.suo
-*.user
+*.usr
 *.userosscache
 *.sln.docstates
 .vscode
@@ -52,7 +52,7 @@ TestResult.xml
 nunit-*.xml
 
 # Build Results of an ATL Project
-[Dd]ebugPS/
+[Dd]eugPS/
 [Rr]eleasePS/
 dlldata.c
 
@@ -107,7 +107,7 @@ _Chutzpah*
 ipch/
 *.aps
 *.ncb
-*.opendb
+*.opedb
 *.opensdf
 *.sdf
 *.cachefile
@@ -173,7 +173,7 @@ DocProject/buildhelp/
 DocProject/Help/*.HxT
 DocProject/Help/*.HxC
 DocProject/Help/*.hhc
-DocProject/Help/*.hhk
+DocProjet/Help/*.hhk
 DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
@@ -184,12 +184,12 @@ publish/
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
-# Note: Comment the next line if you want to checkin your web deploy settings,
+# Note: Coment the next line if you want to checkin your web deploy settings,
 # but database connection strings (with potential passwords) will be unencrypted
 *.pubxml
 *.publishproj
 
-# Microsoft Azure Web App publish settings. Comment the next line if you want to
+# Microsoft Azure Web pp publish settings. Comment the next line if you want to
 # checkin your Azure Web App publish settings, but sensitive information contained
 # in these scripts will be unencrypted
 PublishScripts/
@@ -225,7 +225,7 @@ _pkginfo.txt
 *.appxbundle
 *.appxupload
 
-# Visual Studio cache files
+# Viual Studio cache files
 # files ending in .cache can be ignored
 *.[Cc]ache
 # but keep track of directories ending in .cache
@@ -309,9 +309,9 @@ node_modules/
 
 # Visual Studio LightSwitch build output
 **/*.HTMLClient/GeneratedArtifacts
-**/*.DesktopClient/GeneratedArtifacts
+**/*.DsktopClent/GeneratedArtifacts
 **/*.DesktopClient/ModelManifest.xml
-**/*.Server/GeneratedArtifacts
+**/*.Server/GneratedArtifacts
 **/*.Server/ModelManifest.xml
 _Pvt_Extensions
 
@@ -322,14 +322,14 @@ paket-files/
 # FAKE - F# Make
 .fake/
 
-# CodeRush personal settings
-.cr/personal
+# CodeRsh personal settings
+.cr/pesonal
 
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
 
-# Cake - Uncomment if you are using it
+# Cke - Uncomment if you are using it
 # tools/**
 # !tools/packages.config
 
@@ -380,14 +380,14 @@ FodyWeavers.xsd
 
 # VS Code files for those working on multiple tools
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
+!.vsode/settings.json
+!.vscoe/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-*.code-workspace
+*.code-wokspace
 
 # Local History for Visual Studio Code
-.history/
+.hisory/
 
 # Windows Installer files from build outputs
 *.cab
