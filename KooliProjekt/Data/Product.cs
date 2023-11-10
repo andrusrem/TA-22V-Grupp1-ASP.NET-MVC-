@@ -15,7 +15,5 @@ namespace KooliProjekt.Data
         public decimal TimePrice {get;set;}
         //Taken By
     //    public int UserId {get; set;}
-        
-
     }
 }
