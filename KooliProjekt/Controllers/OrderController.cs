@@ -20,13 +20,15 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Order
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             var applicationDbContext = _context.Orders
                 .Include(o => o.Product)
                 .Include(o => o.Customer);
+            var result = await applicationDbContext.GetPagedAsync(page, 1);
+            return View(result);
             
-            return View(await applicationDbContext.ToListAsync());
+            //return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Order/Details/5

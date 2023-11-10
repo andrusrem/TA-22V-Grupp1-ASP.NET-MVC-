@@ -19,12 +19,14 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Invoice
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             var applicationDbContext = _context.Invoices
                 .Include(i => i.Product)
                 .Include(i => i.Customer);
-            return View(await applicationDbContext.ToListAsync());
+            var result = await applicationDbContext.GetPagedAsync(page, 1);
+            return View(result);
+            //return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Invoice/Details/5

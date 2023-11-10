@@ -49,7 +49,15 @@ namespace KooliProjekt
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+            
+            using (var scope = app.Services.CreateScope())
+            using (var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
+            {
+                SeedData.Generate(applicationDbContext);
+
+            }
             app.MapRazorPages();
+
 
             app.Run();
         }
