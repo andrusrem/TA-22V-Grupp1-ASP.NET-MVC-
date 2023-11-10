@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
+using KooliProjekt;
 
 namespace KooliProjekt.Controllers
 {
@@ -24,6 +25,8 @@ namespace KooliProjekt.Controllers
             var result = await _context.Products.GetPagedAsync(page, 1);
             return View(result);
         }
+
+
 
         // GET: Product/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -54,15 +57,32 @@ namespace KooliProjekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product, IFormFile image)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            if (!ModelState.IsValid)
+            {       
+                return View(product);
             }
-            return View(product);
+            
+            _context.Add(product);
+            await _context.SaveChangesAsync();
+
+            var path = Url.Content("/Users/andrusremets/TA-22V-Grupp1/KooliProjekt/Images/" + product.Id + ".jpg");
+ 
+            using(var stream = image.OpenReadStream())
+            using(var fileStream = new FileStream(path, FileMode.CreateNew))
+            {
+                await stream.CopyToAsync(fileStream);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Image(int id)
+        {
+            var path = "/Users/andrusremets/TA-22V-Grupp1/KooliProjekt/Images/" + id + ".jpg";
+            var stream = System.IO.File.OpenRead(path);
+            return File(stream, "image/jpeg");
         }
 
         // GET: Product/Edit/5
