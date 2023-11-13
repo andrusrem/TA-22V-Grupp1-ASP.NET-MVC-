@@ -22,7 +22,7 @@ namespace KooliProjekt.Controllers
         // GET: Product
         public async Task<IActionResult> Index(int page = 1)
         {
-            var result = await _context.Products.GetPagedAsync(page, 1);
+            var result = await _context.Products.GetPagedAsync(page, 5);
             return View(result);
         }
 
@@ -57,7 +57,7 @@ namespace KooliProjekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product, IFormFile image)
+        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product, IFormFile? image)
         {
             if (!ModelState.IsValid)
             {       
@@ -68,7 +68,8 @@ namespace KooliProjekt.Controllers
             await _context.SaveChangesAsync();
 
             var path = Url.Content("/Users/andrusremets/TA-22V-Grupp1/KooliProjekt/Images/" + product.Id + ".jpg");
- 
+
+
             using(var stream = image.OpenReadStream())
             using(var fileStream = new FileStream(path, FileMode.CreateNew))
             {
@@ -106,7 +107,7 @@ namespace KooliProjekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product, IFormFile image)
         {
             if (id != product.Id)
             {
@@ -131,11 +132,24 @@ namespace KooliProjekt.Controllers
                         throw;
                     }
                 }
+                var path = Url.Content("/Users/andrusremets/TA-22V-Grupp1/KooliProjekt/Images/" + product.Id + ".jpg");
+
+                if (image != null) 
+                {
+                    using(var stream = image.OpenReadStream())
+                    using(var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await stream.CopyToAsync(fileStream);
+                        
+                    }
+                }
+ 
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
         }
-
+        
         // GET: Product/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

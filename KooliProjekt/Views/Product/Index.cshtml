@@ -45,7 +45,7 @@
 @foreach (var item in Model.Results) {
         <tr>
             <td>
-                <img src="/Product/Image/@item.Id"/>
+                <img style="width:100px; height:100px;" src="/Product/Image/@item.Id"/>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Brand)

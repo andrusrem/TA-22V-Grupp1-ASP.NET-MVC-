@@ -3,56 +3,79 @@
 @{
     ViewData["Title"] = "Details";
 }
-
+<style>
+    .dl1
+    {  
+        flex: auto;
+        
+    }
+</style>
 <h1>Details</h1>
 
 <div>
     <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Brand)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Brand)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Model)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Model)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Manufacturer)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Manufacturer)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CarNum)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CarNum)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CarType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CarType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DistancePrice)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DistancePrice)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TimePrice)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TimePrice)
-        </dd>
-    </dl>
+    <hr /> 
+    <div class="dl1">
+        <div class="dl2">
+        <dl>
+            <dt>
+                Image
+            </dt>
+            <dd>
+                <img style="width:100px; height:100px;" src="/Product/Image/@Model.Id"/>
+            </dd>
+        </dl>
+        </div>
+        <div>
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Brand)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Brand)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Model)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Model)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Manufacturer)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Manufacturer)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.CarNum)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.CarNum)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.CarType)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.CarType)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.DistancePrice)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.DistancePrice)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.TimePrice)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.TimePrice)
+            </dd>
+        </dl>
+        </div>
+        
+    </div> 
+    
+    
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
