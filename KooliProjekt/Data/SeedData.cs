@@ -45,7 +45,7 @@ namespace KooliProjekt.Data
             invoice.TotalPrice = 100;
             invoice.DistanceDriven = 10;
             invoice.PayStatus = false;
-            invoice.CustomerId = 1;
+            invoice.CustomerId = "1fcea04f-7ac7-434a-bfbe-c37f445e377e";
 
             applicationDbContext.Invoices.Add(invoice);
 

@@ -1,6 +1,7 @@
 using KooliProjekt.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using KooliProjekt.Services;
 
 namespace KooliProjekt
 {
@@ -19,6 +20,11 @@ namespace KooliProjekt
             builder.Services.AddDefaultIdentity<Customer>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+                        
+            builder.Services.AddSingleton<ImageService>();
+
+            builder.Services.AddScoped<ProductService>();
 
     
 
