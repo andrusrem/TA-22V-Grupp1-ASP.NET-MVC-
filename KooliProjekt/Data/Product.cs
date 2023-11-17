@@ -13,6 +13,7 @@ namespace KooliProjekt.Data
         public CarType CarType {get;set;}
         public decimal DistancePrice {get;set;}
         public decimal TimePrice {get;set;}
+        
         public string? ImageId {get;set;}
         public Image Image {get;set;}
 

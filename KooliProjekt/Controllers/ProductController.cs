@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
 using KooliProjekt;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
@@ -14,18 +15,24 @@ namespace KooliProjekt.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductController(ApplicationDbContext context)
+        private readonly ImageService _imageService;
+
+        private readonly ProductService _productService;
+
+        public ProductController(ApplicationDbContext context, ImageService imageService, ProductService productService)
         {
             _context = context;
+            _imageService = imageService;
+            _productService = productService;
         }
+
+
 
         // GET: Product
         public async Task<IActionResult> Index(int page = 1)
         {
-            var result = await _context.Products.GetPagedAsync(page, 5);
-            return View(result);
+            return View(await _productService.List(page, 5));
         }
-
 
 
         // GET: Product/Details/5
@@ -67,13 +74,10 @@ namespace KooliProjekt.Controllers
             _context.Add(product);
             await _context.SaveChangesAsync();
 
-            var path = Url.Content("/Users/andrusremets/TA-22V-Grupp1/KooliProjekt/Images/" + product.Id + ".jpg");
-
 
             using(var stream = image.OpenReadStream())
-            using(var fileStream = new FileStream(path, FileMode.CreateNew))
             {
-                await stream.CopyToAsync(fileStream);
+                await _imageService.WriteImage(product.Id, stream);
             }
 
             return RedirectToAction(nameof(Index));
@@ -81,9 +85,8 @@ namespace KooliProjekt.Controllers
 
         public IActionResult Image(int id)
         {
-            var path = "/Users/andrusremets/TA-22V-Grupp1/KooliProjekt/Images/" + id + ".jpg";
-            var stream = System.IO.File.OpenRead(path);
-            return File(stream, "image/jpeg");
+            return File(_imageService.ReadImage(id), "image/jpeg");
+            
         }
 
         // GET: Product/Edit/5
@@ -132,15 +135,21 @@ namespace KooliProjekt.Controllers
                         throw;
                     }
                 }
-                var path = Url.Content("/Users/andrusremets/TA-22V-Grupp1/KooliProjekt/Images/" + product.Id + ".jpg");
+                
 
                 if (image != null) 
                 {
+                    
                     using(var stream = image.OpenReadStream())
-                    using(var fileStream = new FileStream(path, FileMode.Create))
                     {
-                        await stream.CopyToAsync(fileStream);
-                        
+                        await _imageService.UpdateImage(product.Id, stream);
+                    }
+                }
+                else if (image == null)
+                {
+                    using(var stream = image.OpenReadStream())
+                    {
+                        await _imageService.WriteImage(product.Id, stream);
                     }
                 }
  
