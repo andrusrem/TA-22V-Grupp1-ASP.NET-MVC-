@@ -21,7 +21,6 @@ namespace KooliProjekt.Controllers
 
         public ProductController(ApplicationDbContext context, ImageService imageService, ProductService productService)
         {
-            _context = context;
             _imageService = imageService;
             _productService = productService;
         }
@@ -38,13 +37,12 @@ namespace KooliProjekt.Controllers
         // GET: Product/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Products == null)
+            if (!id.HasValue || !_productService.Existance(id.Value))
             {
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = await _productService.GetById(id.Value);
             if (product == null)
             {
                 return NotFound();
@@ -71,8 +69,7 @@ namespace KooliProjekt.Controllers
                 return View(product);
             }
             
-            _context.Add(product);
-            await _context.SaveChangesAsync();
+            await _productService.Save(product);
 
 
             using(var stream = image.OpenReadStream())
@@ -92,12 +89,12 @@ namespace KooliProjekt.Controllers
         // GET: Product/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Products == null)
+            if (!id.HasValue || !_productService.Existance(id.Value))
             {
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _productService.GetById(id.Value);
             if (product == null)
             {
                 return NotFound();
@@ -121,12 +118,11 @@ namespace KooliProjekt.Controllers
             {
                 try
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
+                    await _productService.Save(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.Id))
+                    if (!_productService.Existance(product.Id))
                     {
                         return NotFound();
                     }
@@ -162,13 +158,12 @@ namespace KooliProjekt.Controllers
         // GET: Product/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Products == null)
+            if (!id.HasValue || !_productService.Existance(id.Value))
             {
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = await _productService.GetById(id.Value);
             if (product == null)
             {
                 return NotFound();
@@ -182,23 +177,9 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Products == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Products'  is null.");
-            }
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
-            {
-                _context.Products.Remove(product);
-            }
             
-            await _context.SaveChangesAsync();
+            await _productService.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProductExists(int id)
-        {
-          return _context.Products.Any(e => e.Id == id);
-        }
+        }   
     }
 }
