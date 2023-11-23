@@ -26,6 +26,10 @@ namespace KooliProjekt
 
             builder.Services.AddScoped<ProductService>();
 
+            builder.Services.AddScoped<OrderService>();
+
+            builder.Services.AddScoped<InvoiceService>();
+
     
 
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt;
 using KooliProjekt.Data;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
@@ -14,19 +15,21 @@ namespace KooliProjekt.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public OrderController(ApplicationDbContext context)
+        private readonly OrderService _orderService;
+        private readonly ProductService _productService;
+
+        public OrderController(ApplicationDbContext context, OrderService orderService)
         {
             _context = context;
+            _orderService = orderService;
+            
         }
 
         // GET: Order
         public async Task<IActionResult> Index(int page = 1)
         {
-            var applicationDbContext = _context.Orders
-                .Include(o => o.Product)
-                .Include(o => o.Customer);
-            var result = await applicationDbContext.GetPagedAsync(page, 1);
-            return View(result);
+            
+            return View(await _orderService.List(page, 1));
             
             //return View(await applicationDbContext.ToListAsync());
         }
@@ -34,15 +37,12 @@ namespace KooliProjekt.Controllers
         // GET: Order/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Orders == null)
+            if (!id.HasValue || !_orderService.Existance(id.Value))
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders
-                .Include(o => o.Product)
-                .Include(o => o.Customer)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var order = await _orderService.GetById(id.Value);
             if (order == null)
             {
                 return NotFound();
@@ -68,8 +68,7 @@ namespace KooliProjekt.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(order);
-                await _context.SaveChangesAsync();
+                await _orderService.Save(order);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProductId"] = new SelectList(_context.Products, "Id", "CarName", order.ProductId);
@@ -80,12 +79,12 @@ namespace KooliProjekt.Controllers
         // GET: Order/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Orders == null)
+            if (!id.HasValue || !_orderService.Existance(id.Value))
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _orderService.GetById(id.Value);
             if (order == null)
             {
                 return NotFound();
@@ -111,12 +110,11 @@ namespace KooliProjekt.Controllers
             {
                 try
                 {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
+                    await _orderService.Save(order);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderExists(order.Id))
+                    if (!_orderService.Existance(order.Id))
                     {
                         return NotFound();
                     }
@@ -135,15 +133,12 @@ namespace KooliProjekt.Controllers
         // GET: Order/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Orders == null)
+            if (!id.HasValue || !_orderService.Existance(id.Value))
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders
-                .Include(o => o.Product)
-                .Include(o => o.Customer)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var order = await _orderService.GetById(id.Value);
             if (order == null)
             {
                 return NotFound();
@@ -157,23 +152,8 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Orders == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Orders'  is null.");
-            }
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
-            {
-                _context.Orders.Remove(order);
-            }
-            
-            await _context.SaveChangesAsync();
+            await _orderService.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool OrderExists(int id)
-        {
-          return _context.Orders.Any(e => e.Id == id);
         }
     }
 }

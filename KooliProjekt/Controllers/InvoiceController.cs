@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
@@ -13,18 +14,18 @@ namespace KooliProjekt.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public InvoiceController(ApplicationDbContext context)
+        private readonly InvoiceService _invoiceService;
+
+        public InvoiceController(ApplicationDbContext context, InvoiceService invoiceService)
         {
             _context = context;
+            _invoiceService = invoiceService;
         }
 
         // GET: Invoice
         public async Task<IActionResult> Index(int page = 1)
         {
-            var applicationDbContext = _context.Invoices
-                .Include(i => i.Product)
-                .Include(i => i.Customer);
-            var result = await applicationDbContext.GetPagedAsync(page, 1);
+            var result = await _invoiceService.List(page, 5);
             return View(result);
             //return View(await applicationDbContext.ToListAsync());
         }
@@ -32,15 +33,12 @@ namespace KooliProjekt.Controllers
         // GET: Invoice/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Invoices == null)
+            if (!id.HasValue || !_invoiceService.Existance(id.Value))
             {
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices
-                .Include(i => i.Product)
-                .Include(i => i.Customer)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var invoice = await _invoiceService.GetById(id.Value);
             if (invoice == null)
             {
                 return NotFound();
@@ -66,8 +64,7 @@ namespace KooliProjekt.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(invoice);
-                await _context.SaveChangesAsync();
+                await _invoiceService.Save(invoice);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProductId"] = new SelectList(_context.Products, "Id", "CarName", invoice.ProductId);
@@ -78,12 +75,12 @@ namespace KooliProjekt.Controllers
         // GET: Invoice/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Invoices == null)
+            if (!id.HasValue || !_invoiceService.Existance(id.Value))
             {
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = await _invoiceService.GetById(id.Value);
             if (invoice == null)
             {
                 return NotFound();
@@ -109,12 +106,11 @@ namespace KooliProjekt.Controllers
             {
                 try
                 {
-                    _context.Update(invoice);
-                    await _context.SaveChangesAsync();
+                    await _invoiceService.Save(invoice);   
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!InvoiceExists(invoice.Id))
+                    if (!_invoiceService.Existance(id))
                     {
                         return NotFound();
                     }
@@ -133,15 +129,12 @@ namespace KooliProjekt.Controllers
         // GET: Invoice/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Invoices == null)
+            if (!id.HasValue || !_invoiceService.Existance(id.Value))
             {
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices
-                .Include(i => i.Product)
-                .Include(i => i.Customer)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var invoice = await _invoiceService.GetById(id.Value);
             if (invoice == null)
             {
                 return NotFound();
@@ -155,23 +148,10 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Invoices == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Invoices'  is null.");
-            }
-            var invoice = await _context.Invoices.FindAsync(id);
-            if (invoice != null)
-            {
-                _context.Invoices.Remove(invoice);
-            }
             
-            await _context.SaveChangesAsync();
+            await _invoiceService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InvoiceExists(int id)
-        {
-          return _context.Invoices.Any(e => e.Id == id);
-        }
     }
 }

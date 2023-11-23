@@ -13,13 +13,13 @@ namespace KooliProjekt.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        
 
         private readonly ImageService _imageService;
 
         private readonly ProductService _productService;
 
-        public ProductController(ApplicationDbContext context, ImageService imageService, ProductService productService)
+        public ProductController(ImageService imageService, ProductService productService)
         {
             _imageService = imageService;
             _productService = productService;
@@ -62,7 +62,7 @@ namespace KooliProjekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product, IFormFile? image)
+        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product, IFormFile image)
         {
             if (!ModelState.IsValid)
             {       
