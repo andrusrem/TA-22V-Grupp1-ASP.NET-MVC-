@@ -3,6 +3,7 @@ using KooliProjekt.Data;
 using Microsoft.AspNetCore.Mvc;
 using KooliProjekt.Controllers;
 using System.ComponentModel;
+using System.Linq;
 
 namespace KooliProjekt.Services
 {
@@ -55,11 +56,23 @@ namespace KooliProjekt.Services
             await _context.SaveChangesAsync();
 
         }
+        public async Task<IList<LookupItem>> Lookup()
+        {
+            
+            return await _context.Products
+                .OrderBy(p => p.Brand)
+                .ThenBy(p => p.Model)
+                .ThenBy(p => p.CarNum)
+                .Select(p => new LookupItem{
+                    Id = p.Id,
+                    Name = p.Brand + " " + p.Model + " " + p.CarNum
+                }).ToListAsync();
+        }
 
         public bool Existance(int Id)
         {
             return _context.Products.Any(e => e.Id == Id);
         }
-
+        
     }
 }

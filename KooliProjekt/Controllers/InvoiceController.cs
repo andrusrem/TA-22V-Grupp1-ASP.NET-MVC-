@@ -12,14 +12,17 @@ namespace KooliProjekt.Controllers
 {
     public class InvoiceController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        
 
         private readonly InvoiceService _invoiceService;
+        private readonly ProductService _productService;
+        private readonly CustomerService _customerService;
 
-        public InvoiceController(ApplicationDbContext context, InvoiceService invoiceService)
+        public InvoiceController(InvoiceService invoiceService, ProductService productService, CustomerService customerService)
         {
-            _context = context;
             _invoiceService = invoiceService;
+            _productService = productService;
+            _customerService = customerService;
         }
 
         // GET: Invoice
@@ -48,10 +51,10 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Invoice/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "CarName");
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name");
+            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name");
+            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name");
             return View();
         }
 
@@ -67,8 +70,8 @@ namespace KooliProjekt.Controllers
                 await _invoiceService.Save(invoice);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "CarName", invoice.ProductId);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", invoice.CustomerId);
+            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name", invoice.ProductId);
+            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name", invoice.CustomerId);
             return View(invoice);
         }
 
@@ -85,8 +88,8 @@ namespace KooliProjekt.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "CarName", invoice.ProductId);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", invoice.CustomerId);
+            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name", invoice.ProductId);
+            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name", invoice.CustomerId);
             return View(invoice);
         }
 
@@ -121,8 +124,8 @@ namespace KooliProjekt.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "CarName", invoice.ProductId);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", invoice.CustomerId);
+            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name", invoice.ProductId);
+            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name", invoice.CustomerId);
             return View(invoice);
         }
 

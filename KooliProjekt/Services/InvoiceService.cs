@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
-using Azure;
 
 namespace KooliProjekt.Services
 {

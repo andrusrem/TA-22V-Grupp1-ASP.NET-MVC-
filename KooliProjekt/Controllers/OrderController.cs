@@ -13,23 +13,23 @@ namespace KooliProjekt.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly ApplicationDbContext _context;
 
         private readonly OrderService _orderService;
         private readonly ProductService _productService;
+        private readonly CustomerService _customerService;
 
-        public OrderController(ApplicationDbContext context, OrderService orderService)
+        public OrderController(OrderService orderService, ProductService productService, CustomerService customerService)
         {
-            _context = context;
             _orderService = orderService;
-            
+            _productService = productService;
+            _customerService = customerService;
         }
 
         // GET: Order
         public async Task<IActionResult> Index(int page = 1)
         {
             
-            return View(await _orderService.List(page, 1));
+            return View(await _orderService.List(page, 2));
             
             //return View(await applicationDbContext.ToListAsync());
         }
@@ -52,10 +52,11 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Order/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "CarName");
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name");
+            
+            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name");
+            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name");
             return View();
         }
 
@@ -71,8 +72,8 @@ namespace KooliProjekt.Controllers
                 await _orderService.Save(order);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "CarName", order.ProductId);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", order.CustomerId);
+            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name", order.ProductId);
+            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name", order.CustomerId);
             return View(order);
         }
 
@@ -89,8 +90,8 @@ namespace KooliProjekt.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "CarName", order.ProductId);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", order.CustomerId);
+            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name", order.ProductId);
+            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name", order.CustomerId);
             return View(order);
         }
 
@@ -125,8 +126,8 @@ namespace KooliProjekt.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "CarName", order.ProductId);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", order.CustomerId);
+            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name", order.ProductId);
+            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name", order.CustomerId);
             return View(order);
         }
 
