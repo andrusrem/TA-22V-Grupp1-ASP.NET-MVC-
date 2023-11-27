@@ -13,11 +13,13 @@ namespace KooliProjekt
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<Customer>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
@@ -31,6 +33,8 @@ namespace KooliProjekt
             builder.Services.AddScoped<InvoiceService>();
 
             builder.Services.AddScoped<CustomerService>();
+            //builder.Services.AddIdentity<IdentityRole<string>>();
+            //builder.Services.AddScoped<RoleManager<IdentityRole>>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -57,12 +61,17 @@ namespace KooliProjekt
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             
+            #if (DEBUG)
             using (var scope = app.Services.CreateScope())
-            using (var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
             {
-                SeedData.Generate(applicationDbContext);
+                var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Customer>>();
+                //var roleAdd = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<string>>>();
+                SeedData.Generate(applicationDbContext, userManager, roleManager);
 
             }
+            #endif
             app.MapRazorPages();
 
 

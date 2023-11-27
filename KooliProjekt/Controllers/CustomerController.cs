@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
 using KooliProjekt.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KooliProjekt.Controllers
 {
+    
     public class CustomerController : Controller
     {
         private readonly CustomerService _customerService;
@@ -20,6 +22,7 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Customer
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
               return View(await _customerService.GetCustomerAsync());

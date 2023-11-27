@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
 using KooliProjekt;
 using KooliProjekt.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KooliProjekt.Controllers
 {
@@ -18,16 +19,19 @@ namespace KooliProjekt.Controllers
         private readonly ImageService _imageService;
 
         private readonly ProductService _productService;
+        private readonly OrderService _orderService;
 
-        public ProductController(ImageService imageService, ProductService productService)
+        public ProductController(ImageService imageService, ProductService productService, OrderService orderService)
         {
             _imageService = imageService;
             _productService = productService;
+            _orderService = orderService;
         }
 
 
 
         // GET: Product
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Index(int page = 1)
         {
             return View(await _productService.List(page, 5));
@@ -85,6 +89,8 @@ namespace KooliProjekt.Controllers
             return File(_imageService.ReadImage(id), "image/jpeg");
             
         }
+
+    
 
         // GET: Product/Edit/5
         public async Task<IActionResult> Edit(int? id)

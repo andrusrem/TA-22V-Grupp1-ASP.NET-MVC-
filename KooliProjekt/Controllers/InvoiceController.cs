@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
 using KooliProjekt.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KooliProjekt.Controllers
 {
@@ -26,6 +27,7 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Invoice
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Index(int page = 1)
         {
             var result = await _invoiceService.List(page, 5);

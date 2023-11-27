@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using KooliProjekt;
 using KooliProjekt.Data;
 using KooliProjekt.Services;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace KooliProjekt.Controllers
 {
@@ -18,6 +20,8 @@ namespace KooliProjekt.Controllers
         private readonly ProductService _productService;
         private readonly CustomerService _customerService;
 
+        public string Role { get; private set; }
+
         public OrderController(OrderService orderService, ProductService productService, CustomerService customerService)
         {
             _orderService = orderService;
@@ -26,6 +30,7 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Order
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Index(int page = 1)
         {
             
@@ -52,12 +57,17 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Order/Create
-        public async Task<IActionResult> Create()
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> Create([FromQuery] int? productId)
         {
+            var newOrder = new Order();
+            if (productId.HasValue)
+            newOrder.ProductId = productId.Value;
             
+
             ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name");
             ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name");
-            return View();
+            return View(newOrder);
         }
 
         // POST: Order/Create
