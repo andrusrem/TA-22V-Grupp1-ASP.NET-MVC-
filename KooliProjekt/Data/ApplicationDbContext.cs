@@ -16,7 +16,9 @@ namespace KooliProjekt.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders {get;set;}
         public DbSet<Image> Images { get; set; }
-        
+        public DbSet<Myorders> Myorders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Myinvoice> myinvoices { get; set; }
 
     }
 }

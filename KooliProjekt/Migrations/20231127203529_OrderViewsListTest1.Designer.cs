@@ -3,6 +3,7 @@ using System;
 using KooliProjekt.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KooliProjekt.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231127203529_OrderViewsListTest1")]
+    partial class OrderViewsListTest1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.12");
@@ -151,57 +154,6 @@ namespace KooliProjekt.Migrations
                     b.ToTable("Invoices");
                 });
 
-            modelBuilder.Entity("KooliProjekt.Data.Myorders", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("EstimatedPrice")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Myorders");
-                });
-
-            modelBuilder.Entity("KooliProjekt.Data.OrderDetail", b =>
-                {
-                    b.Property<int>("OrderDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("OrderDetailId");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderDetails");
-                });
-
             modelBuilder.Entity("KooliProjekt.Data.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -229,7 +181,7 @@ namespace KooliProjekt.Migrations
                     b.Property<string>("Model")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("MyordersId")
+                    b.Property<int?>("OrderId")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("TimePrice")
@@ -239,7 +191,7 @@ namespace KooliProjekt.Migrations
 
                     b.HasIndex("ImageId");
 
-                    b.HasIndex("MyordersId");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Products");
                 });
@@ -417,51 +369,15 @@ namespace KooliProjekt.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("KooliProjekt.Data.Myorders", b =>
-                {
-                    b.HasOne("KooliProjekt.Data.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
-
-                    b.HasOne("KooliProjekt.Data.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("KooliProjekt.Data.OrderDetail", b =>
-                {
-                    b.HasOne("KooliProjekt.Order", "Order")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("KooliProjekt.Data.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("KooliProjekt.Data.Product", b =>
                 {
                     b.HasOne("KooliProjekt.Data.Image", "Image")
                         .WithMany()
                         .HasForeignKey("ImageId");
 
-                    b.HasOne("KooliProjekt.Data.Myorders", null)
+                    b.HasOne("KooliProjekt.Order", null)
                         .WithMany("Products")
-                        .HasForeignKey("MyordersId");
+                        .HasForeignKey("OrderId");
 
                     b.Navigation("Image");
                 });
@@ -539,14 +455,9 @@ namespace KooliProjekt.Migrations
                     b.Navigation("Invoices");
                 });
 
-            modelBuilder.Entity("KooliProjekt.Data.Myorders", b =>
-                {
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("KooliProjekt.Order", b =>
                 {
-                    b.Navigation("OrderDetails");
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

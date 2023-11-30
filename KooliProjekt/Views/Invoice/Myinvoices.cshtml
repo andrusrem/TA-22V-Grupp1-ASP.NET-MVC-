@@ -1,0 +1,18 @@
+@model List<KooliProjekt.Data.Myinvoice>
+
+<h1>Your Invoices:</h1>
+
+@if(Model.Count == 0)
+    {
+        <h4>You do not have Invoices yet.</h4>
+    }
+@foreach (var invoice in Model)
+{
+    <div>
+        <h3>Invoice ID: @invoice.Id</h3>
+        <p>Your Name: @invoice.CustomerId</p>
+        <p>Total Price: @invoice.TotalPrice</p>
+        <p>Product Name: @invoice.ProductName</p>
+    </div>
+    
+}

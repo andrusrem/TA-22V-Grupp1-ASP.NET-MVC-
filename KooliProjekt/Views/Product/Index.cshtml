@@ -69,10 +69,10 @@
                 @Html.DisplayFor(modelItem => item.TimePrice)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                | <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a style="display: flex;" asp-controller="Order" asp-action="Create" asp-route-productId="@item.Id"><h2>Order this car</h2></a>
+                <a style="display: flex; padding-left: 10%; padding-top: 15%;" asp-controller="Order" asp-action="Create" asp-route-productId="@item.Id"><h2>Order this car</h2></a>
             </td>
         </tr>
 }

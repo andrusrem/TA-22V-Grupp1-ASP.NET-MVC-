@@ -19,24 +19,52 @@ namespace KooliProjekt.Controllers
         private readonly OrderService _orderService;
         private readonly ProductService _productService;
         private readonly CustomerService _customerService;
+        private readonly ApplicationDbContext _context;
 
         public string Role { get; private set; }
 
-        public OrderController(OrderService orderService, ProductService productService, CustomerService customerService)
+        public OrderController(ApplicationDbContext context, OrderService orderService, ProductService productService, CustomerService customerService)
         {
             _orderService = orderService;
             _productService = productService;
             _customerService = customerService;
+            _context = context;
         }
 
         // GET: Order
-        [Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int page = 1)
         {
             
             return View(await _orderService.List(page, 2));
             
             //return View(await applicationDbContext.ToListAsync());
+        }
+
+        public IActionResult Myorders()
+        {
+
+
+           string loggedInUsername = User.Identity.Name; // Get the logged-in username
+
+
+            // Retrieve the orders and the products for the logged-in user
+            List<Order> orders = _context.Orders
+                .Where(o => o.Customer.Email == loggedInUsername)
+                .Include(o => o.Customer)
+                .Include(o => o.Product)
+                .ToList();
+
+            List<Myorders> myorders = orders.Select(o => new Myorders
+            {
+                Id = o.Id,
+                ProductName = o.Product.CarName,
+                EstimatedPrice = o.EstimatedPrice,
+                CustomerId = o.Customer.Name,
+            }).ToList();
+            // Map the orders and products to the ViewModel
+            
+            return View(myorders);
         }
 
         // GET: Order/Details/5

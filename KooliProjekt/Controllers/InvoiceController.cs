@@ -18,12 +18,14 @@ namespace KooliProjekt.Controllers
         private readonly InvoiceService _invoiceService;
         private readonly ProductService _productService;
         private readonly CustomerService _customerService;
+        private readonly ApplicationDbContext _context;
 
-        public InvoiceController(InvoiceService invoiceService, ProductService productService, CustomerService customerService)
+        public InvoiceController(ApplicationDbContext context, InvoiceService invoiceService, ProductService productService, CustomerService customerService)
         {
             _invoiceService = invoiceService;
             _productService = productService;
             _customerService = customerService;
+            _context = context;
         }
 
         // GET: Invoice
@@ -33,6 +35,32 @@ namespace KooliProjekt.Controllers
             var result = await _invoiceService.List(page, 5);
             return View(result);
             //return View(await applicationDbContext.ToListAsync());
+        }
+
+        public IActionResult Myinvoices()
+        {
+
+
+           string loggedInUsername = User.Identity.Name; // Get the logged-in username
+
+
+            // Retrieve the orders and the products for the logged-in user
+            List<Invoice> invoices = _context.Invoices
+                .Where(o => o.Customer.Email == loggedInUsername)
+                .Include(o => o.Customer)
+                .Include(o => o.Product)
+                .ToList();
+
+            List<Myinvoice> myinvoices = invoices.Select(o => new Myinvoice
+            {
+                Id = o.Id,
+                ProductName = o.Product.CarName,
+                TotalPrice = o.TotalPrice,
+                CustomerId = o.Customer.Name,
+            }).ToList();
+            // Map the orders and products to the ViewModel
+            
+            return View(myinvoices);
         }
 
         // GET: Invoice/Details/5
