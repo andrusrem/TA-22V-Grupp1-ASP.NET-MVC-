@@ -7,11 +7,11 @@ namespace KooliProjekt
 
         public int Id {get; set;}
         public int ProductId {get;set;}
+        public decimal ProductEstimatedPrice { get; set; }
+        public DateTime? WhenTaken {get; set;}
         public Product Product {get;set;}
-        
-        public decimal EstimatedPrice {get; set;} //Calculated from DistancePrice and TimePrice in Product
         public string CustomerId {get;set;}
         public Customer Customer {get;set;}
-        public List<OrderDetail> OrderDetails { get; set; } // This class might be needed if I start extend Order class
+        public List<Product> Products { get; set; } // This class might be needed if I start extend Order class
     }
 }

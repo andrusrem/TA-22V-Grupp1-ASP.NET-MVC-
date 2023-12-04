@@ -1,6 +1,6 @@
 @model List<KooliProjekt.Data.Myorders>
 
-<h1>Your Orders</h1>
+<h1 style="font-size: xx-large;">Your Orders</h1>
 
 @if(Model.Count == 0)
     {
@@ -9,10 +9,29 @@
 
 @foreach (var order in Model)
 {
-    <div>
-        <h3>Order ID: @order.Id</h3>
-        <p>Customer ID: @order.CustomerId</p>
-        <p>Estimated Price: @order.EstimatedPrice</p>
-        <p>Product ID: @order.ProductName</p>
+    
+    @* <div style="float:right;">
+        <button style=""><a asp-action="Delete" asp-route-id="@order.Id">Finish Your Order</a></button>
+        <img style="float: right; width:100px; height:100px;" src="../Product/Image/@order.ProductId"/>
+    </div> *@
+    <hr>
+    <h3 style="flex: left;">Order Details</h3>
+    <hr>
+    <div style="display: flex;">
+        @* <img style="float: right; width:100px; height:100px;" src="../Product/Image/@order.ProductId"/> *@
+        
+         <div style="flex-grow: 3; flex:left;">
+            <p style="">Customer: @order.CustomerId</p>
+            <p style="">Estimated Price: @order.ProductEstimatedPrice</p>
+            <p style="">Car Name: @order.ProductName</p>
+            <p>What day car is taken: @order.WhenTaken.Date</p>
+        </div>
+
+        <div style="float:right; float-grow: 1;">
+            <button ><a asp-controller="Invoice"  asp-action="Create" asp-route-orderId="@order.Id" asp-route-productId="@order.ProductId" asp-route-customerId="@User">Finish Your Order</a></button>
+            <img style="float: right; width:100px; height:100px;" src="../Product/Image/@order.ProductId"/>
+        </div>
+       
+        
     </div>
 }

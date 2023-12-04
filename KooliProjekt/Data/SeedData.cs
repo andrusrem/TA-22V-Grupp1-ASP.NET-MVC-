@@ -50,7 +50,7 @@ namespace KooliProjekt.Data
             }
             var order = new Order();
             order.ProductId = 3;
-            order.EstimatedPrice = 1495;
+            order.ProductEstimatedPrice = 1495;
 
             applicationDbContext.Orders.Add(order);
         }

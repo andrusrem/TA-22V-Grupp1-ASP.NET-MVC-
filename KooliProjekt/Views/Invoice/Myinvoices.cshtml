@@ -8,11 +8,26 @@
     }
 @foreach (var invoice in Model)
 {
+    <hr>
     <div>
-        <h3>Invoice ID: @invoice.Id</h3>
+        <h3>Invoice Details</h3>
         <p>Your Name: @invoice.CustomerId</p>
         <p>Total Price: @invoice.TotalPrice</p>
         <p>Product Name: @invoice.ProductName</p>
+        <p>Distance Driven: @invoice.DistanceDriven</p>
+        @if(invoice.PayStatus == false)
+        {
+            <div style="flex:right;">
+                <h5 style="color:red;">You steel need to pay for this car!</h5>
+                <h1><a asp-action="Edit" asp-route-id="@invoice.Id">Pay For It!</a></h1>
+            </div>
+            
+        }
+        else
+        {
+            <h5 style="color:green;">This invoice is already paid</h5>
+        }
+        <hr>
     </div>
     
 }

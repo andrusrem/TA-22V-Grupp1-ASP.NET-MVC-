@@ -1,0 +1,42 @@
+@model KooliProjekt.Data.Customer
+
+@{
+    ViewData["Title"] = "AdminPanel";
+}
+
+<h1>Admin Panel</h1>
+
+<div>
+    <ul>
+        <li>
+            <a asp-controller="Customer" asp-action="Index">Customers</a>
+        </li>
+        <li>
+            <a asp-controller="Order" asp-action="Index">Orders</a>
+            <ul>
+                <li>
+                    <a asp-controller="Order" asp-action="Create">Create Order Manualy</a>
+                </li>
+            </ul>
+            
+        </li>
+        <li>
+            <a asp-controller="Product" asp-action="Index">Products</a>
+            <ul>
+                <li>
+                    <a asp-controller="Product" asp-action="Create">Add new Car</a>
+                </li>
+            </ul>
+            
+        </li>
+        <li>
+            <a asp-controller="Invoice" asp-action="Index">Invoices</a>
+            <ul>
+                <li>
+                    <a asp-controller="Invoice" asp-action="Create">Create Invoice Manualy</a>
+                </li>
+            </ul>
+            
+        </li>
+    </ul>
+</div>

@@ -3,7 +3,12 @@
 @{
     ViewData["Title"] = "Edit";
 }
-
+<style>
+    dd
+    {
+        text-align: center;
+    }
+</style>
 <h1>Edit</h1>
 
 <h4>Order</h4>
@@ -19,9 +24,9 @@
                 <span asp-validation-for="ProductId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EstimatedPrice" class="control-label"></label>
-                <input asp-for="EstimatedPrice" class="form-control" />
-                <span asp-validation-for="EstimatedPrice" class="text-danger"></span>
+                <label asp-for="ProductEstimatedPrice" class="control-label"></label>
+                <input asp-for="ProductEstimatedPrice" class="form-control" />
+                <span asp-validation-for="ProductEstimatedPrice" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CustomerId" class="control-label"></label>
@@ -35,7 +40,8 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @if(User.IsInRole("Admin")){<a asp-action="Index">Back to List</a>}
+    @if(!User.IsInRole("Admin")){<a asp-action="Myorders">Back to My Orders</a>}
 </div>
 
 @section Scripts {

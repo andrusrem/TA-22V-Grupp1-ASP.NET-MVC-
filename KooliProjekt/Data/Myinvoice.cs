@@ -1,3 +1,5 @@
+using KooliProjekt;
+
 namespace KooliProjekt.Data
 {
     public class Myinvoice
@@ -14,5 +16,7 @@ namespace KooliProjekt.Data
         public bool PayStatus {get; set;}
         public string CustomerId {get;set;}
         public Customer Customer {get;set;}
+        public int OrderId {get; set;}
+        public Order Order {get; set;}
     }
 }

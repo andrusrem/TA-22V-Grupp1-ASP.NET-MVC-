@@ -17,9 +17,9 @@
                 <select asp-for="ProductId" class ="form-control" asp-items="ViewBag.ProductId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="EstimatedPrice" class="control-label"></label>
-                <input asp-for="EstimatedPrice" class="form-control" />
-                <span asp-validation-for="EstimatedPrice" class="text-danger"></span>
+                <label asp-for="ProductEstimatedPrice" class="control-label"></label>
+                <input asp-for="ProductEstimatedPrice" class="form-control" />
+                <span asp-validation-for="ProductEstimatedPrice" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CustomerId" class="control-label"></label>
@@ -34,7 +34,8 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    | <a asp-action="Index">Back to List</a> | 
+    <a asp-controller="Customer" asp-action="AdminPanel">Back to Admin Panel</a> |
 </div>
 
 @section Scripts {

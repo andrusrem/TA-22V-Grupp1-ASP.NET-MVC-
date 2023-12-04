@@ -47,7 +47,7 @@ namespace KooliProjekt.Services
             return await _context.Invoices.FindAsync(id);
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int? id)
         {
             var invoice = await _context.Invoices.FindAsync(id);
             if (invoice != null)

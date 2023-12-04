@@ -28,6 +28,11 @@ namespace KooliProjekt.Controllers
               return View(await _customerService.GetCustomerAsync());
         }
 
+        [Authorize(Roles = "Admin")]
+        public IActionResult AdminPanel()
+        {
+            return View();
+        }
         // GET: Customer/Details/5
         public async Task<IActionResult> Details(string id)
         {

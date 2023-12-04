@@ -14,6 +14,10 @@ namespace KooliProjekt.Data
         public decimal DistancePrice {get;set;}
         public decimal TimePrice {get;set;}
         
+        public decimal EstimatedPrice 
+        {
+            get { return TimePrice + (DistancePrice * 100); }
+        }
         public string? ImageId {get;set;}
         public Image Image {get;set;}
 

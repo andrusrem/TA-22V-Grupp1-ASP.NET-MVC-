@@ -3,6 +3,7 @@ using System;
 using KooliProjekt.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KooliProjekt.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231201133832_NewSome")]
+    partial class NewSome
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.12");
@@ -124,11 +127,8 @@ namespace KooliProjekt.Migrations
                     b.Property<decimal>("DistanceDriven")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("GivenBack")
+                    b.Property<DateTime>("GivenBack")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("PayBy")
                         .HasColumnType("TEXT");
@@ -142,14 +142,12 @@ namespace KooliProjekt.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("WhenTaken")
+                    b.Property<DateTime>("WhenTaken")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -170,9 +168,6 @@ namespace KooliProjekt.Migrations
 
                     b.Property<DateTime>("GivenBack")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("PayBy")
                         .HasColumnType("TEXT");
@@ -195,8 +190,6 @@ namespace KooliProjekt.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -221,9 +214,6 @@ namespace KooliProjekt.Migrations
                     b.Property<string>("ProductName")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("WhenTaken")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
@@ -239,19 +229,24 @@ namespace KooliProjekt.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("OrderId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("ProductEstimatedPrice")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int>("ProductName")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("OrderDetailId");
+
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("OrderId");
 
@@ -321,9 +316,6 @@ namespace KooliProjekt.Migrations
 
                     b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("WhenTaken")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -472,10 +464,6 @@ namespace KooliProjekt.Migrations
                         .WithMany("Invoices")
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("KooliProjekt.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId");
-
                     b.HasOne("KooliProjekt.Data.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -483,8 +471,6 @@ namespace KooliProjekt.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });
@@ -495,12 +481,6 @@ namespace KooliProjekt.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("KooliProjekt.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("KooliProjekt.Data.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -508,8 +488,6 @@ namespace KooliProjekt.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });
@@ -533,6 +511,10 @@ namespace KooliProjekt.Migrations
 
             modelBuilder.Entity("KooliProjekt.Data.OrderDetail", b =>
                 {
+                    b.HasOne("KooliProjekt.Data.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
                     b.HasOne("KooliProjekt.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
@@ -544,6 +526,8 @@ namespace KooliProjekt.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Order");
 

@@ -18,13 +18,15 @@ namespace KooliProjekt.Controllers
         private readonly InvoiceService _invoiceService;
         private readonly ProductService _productService;
         private readonly CustomerService _customerService;
+        private readonly OrderService _orderService;
         private readonly ApplicationDbContext _context;
 
-        public InvoiceController(ApplicationDbContext context, InvoiceService invoiceService, ProductService productService, CustomerService customerService)
+        public InvoiceController(ApplicationDbContext context,OrderService orderService, InvoiceService invoiceService, ProductService productService, CustomerService customerService)
         {
             _invoiceService = invoiceService;
             _productService = productService;
             _customerService = customerService;
+            _orderService = orderService;
             _context = context;
         }
 
@@ -42,7 +44,7 @@ namespace KooliProjekt.Controllers
 
 
            string loggedInUsername = User.Identity.Name; // Get the logged-in username
-
+           
 
             // Retrieve the orders and the products for the logged-in user
             List<Invoice> invoices = _context.Invoices
@@ -57,6 +59,10 @@ namespace KooliProjekt.Controllers
                 ProductName = o.Product.CarName,
                 TotalPrice = o.TotalPrice,
                 CustomerId = o.Customer.Name,
+                PayStatus = o.PayStatus,
+                DistanceDriven = o.DistanceDriven,
+
+
             }).ToList();
             // Map the orders and products to the ViewModel
             
@@ -81,11 +87,50 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Invoice/Create
-        public async Task<IActionResult> Create()
+
+        public async Task<IActionResult> Create(int? productId, int? orderId)
         {
-            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name");
-            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name");
-            return View();
+            var inv = new Invoice();
+            if(User.IsInRole("Admin"))
+            {
+                ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name");
+                ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name");
+                return View();
+            }
+            else
+            {
+                Random random = new Random();
+
+                int min = 10;
+                int max = 1000;
+                int randomIntInRange = random.Next(min, max);
+
+
+                var userId = User.Identity.Name;
+                inv.Customer = _context.Users.FirstOrDefault(u => u.Email == userId);
+                inv.CustomerId = inv.Customer.Id;
+                inv.Product = _context.Products.FirstOrDefault(p => p.Id == productId);
+                inv.Order = _context.Orders.FirstOrDefault(o => o.Id == orderId);
+                inv.OrderId = orderId.Value;
+                inv.ProductId = productId.Value;
+                inv.DistanceDriven = randomIntInRange;
+                inv.PayStatus = false;
+                inv.PayBy = DateTime.Today;
+                inv.WhenTaken = inv.Order.WhenTaken.Value;
+                inv.GivenBack = DateTime.Now;
+
+                TimeSpan timeDifference = inv.GivenBack.Value.Subtract(inv.WhenTaken.Value);
+
+                decimal durationInDecimal = (decimal)timeDifference.TotalDays;
+
+                inv.TotalPrice = Math.Round(durationInDecimal * inv.Product.TimePrice) + (inv.Product.DistancePrice * randomIntInRange);
+
+                await _invoiceService.Save(inv);
+                await _orderService.Delete(inv.OrderId.Value);
+                return RedirectToAction(nameof(Myinvoices));
+
+                
+            }
         }
 
         // POST: Invoice/Create
@@ -113,14 +158,27 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            var invoice = await _invoiceService.GetById(id.Value);
-            if (invoice == null)
+            if(User.IsInRole("Admin"))
             {
-                return NotFound();
+                var invoice = await _invoiceService.GetById(id.Value);
+                if (invoice == null)
+                {
+                    return NotFound();
+                }
+                ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name", invoice.ProductId);
+                ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name", invoice.CustomerId);
+                return View(invoice);
             }
-            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name", invoice.ProductId);
-            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name", invoice.CustomerId);
-            return View(invoice);
+            else
+            {
+                var invoice = await _invoiceService.GetById(id.Value);
+                invoice.PayStatus = true;
+
+                await _invoiceService.Save(invoice); 
+                return RedirectToAction(nameof(Myinvoices));
+
+            }
+
         }
 
         // POST: Invoice/Edit/5
@@ -134,7 +192,7 @@ namespace KooliProjekt.Controllers
             {
                 return NotFound();
             }
-
+            
             if (ModelState.IsValid)
             {
                 try

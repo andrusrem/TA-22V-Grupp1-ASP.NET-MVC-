@@ -20,15 +20,17 @@ namespace KooliProjekt.Controllers
         private readonly ProductService _productService;
         private readonly CustomerService _customerService;
         private readonly ApplicationDbContext _context;
+        private readonly ImageService _imageService;
 
         public string Role { get; private set; }
 
-        public OrderController(ApplicationDbContext context, OrderService orderService, ProductService productService, CustomerService customerService)
+        public OrderController(ApplicationDbContext context, ImageService imageService, OrderService orderService, ProductService productService, CustomerService customerService)
         {
             _orderService = orderService;
             _productService = productService;
             _customerService = customerService;
             _context = context;
+            _imageService = imageService;
         }
 
         // GET: Order
@@ -39,6 +41,11 @@ namespace KooliProjekt.Controllers
             return View(await _orderService.List(page, 2));
             
             //return View(await applicationDbContext.ToListAsync());
+        }
+        public IActionResult Image(int id)
+        {
+            return File(_imageService.ReadImage(id), "image/jpeg");
+            
         }
 
         public IActionResult Myorders()
@@ -59,8 +66,10 @@ namespace KooliProjekt.Controllers
             {
                 Id = o.Id,
                 ProductName = o.Product.CarName,
-                EstimatedPrice = o.EstimatedPrice,
+                ProductEstimatedPrice = o.ProductEstimatedPrice,
+                ProductId = o.ProductId,
                 CustomerId = o.Customer.Name,
+                WhenTaken = o.WhenTaken.Value
             }).ToList();
             // Map the orders and products to the ViewModel
             
@@ -88,14 +97,37 @@ namespace KooliProjekt.Controllers
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create([FromQuery] int? productId)
         {
-            var newOrder = new Order();
-            if (productId.HasValue)
-            newOrder.ProductId = productId.Value;
+            var r = new Order();
+ 
+            if (!User.IsInRole("Admin"))
+            { 
+                var userId = User.Identity.Name;
+                
+                r.Customer = _context.Users.FirstOrDefault(u => u.Email == userId);
+                r.CustomerId = r.Customer.Id;
+                r.ProductId = productId.Value;
+                r.WhenTaken = DateTime.Now;
+                r.Product = _context.Products.FirstOrDefault(p => p.Id == productId);
+                r.ProductEstimatedPrice = r.Product.EstimatedPrice;
+                ViewData["ProductId"] = r.Product.CarName;
+                ViewData["CustomerId"] = r.Customer.Name;
+
+                await _orderService.Save(r);
+                return RedirectToAction(nameof(Myorders));
+            }
+            else
+            {
+                
+                if (productId.HasValue)
+                r.ProductId = productId.Value;
+            
             
 
-            ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name");
-            ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name");
-            return View(newOrder);
+                ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name");
+                ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name");
+            
+                return View(r);
+            }
         }
 
         // POST: Order/Create
@@ -105,15 +137,18 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ProductId,EstimatedPrice,CustomerId")] Order order)
         {
+            
             if (ModelState.IsValid)
             {
                 await _orderService.Save(order);
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["ProductId"] = new SelectList(await _productService.Lookup(), "Id", "Name", order.ProductId);
             ViewData["CustomerId"] = new SelectList(await _customerService.Lookup(), "Id", "Name", order.CustomerId);
             return View(order);
         }
+        
 
         // GET: Order/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -176,7 +211,7 @@ namespace KooliProjekt.Controllers
             {
                 return NotFound();
             }
-
+            
             var order = await _orderService.GetById(id.Value);
             if (order == null)
             {

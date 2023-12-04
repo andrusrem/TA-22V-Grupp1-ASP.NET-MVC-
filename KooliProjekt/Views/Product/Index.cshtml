@@ -6,11 +6,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<h1>Car List</h1>
+@if(User.IsInRole("Admin"))
+{
+    <p>
+       | <a asp-action="Create">Create New</a> | 
+       <a asp-controller="Customer" asp-action="AdminPanel"> Back to Admin Panel</a> |
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -69,10 +72,10 @@
                 @Html.DisplayFor(modelItem => item.TimePrice)
             </td>
             <td>
-                | <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a style="display: flex; padding-left: 10%; padding-top: 15%;" asp-controller="Order" asp-action="Create" asp-route-productId="@item.Id"><h2>Order this car</h2></a>
+                @if(User.IsInRole("Admin")){<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> }|
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                @if(User.IsInRole("Admin")){<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>} |
+                <a style="display: flex; " asp-controller="Order" asp-action="Create" asp-route-productId="@item.Id" asp-route-customerId="@User"><h2>Order this car</h2></a>
             </td>
         </tr>
 }

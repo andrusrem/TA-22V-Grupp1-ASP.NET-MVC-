@@ -52,7 +52,7 @@ namespace KooliProjekt.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int? id)
         {
             var order = await _context.Orders.FindAsync(id);
 
