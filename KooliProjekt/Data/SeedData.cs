@@ -89,12 +89,9 @@ namespace KooliProjekt.Data
             roleManager.CreateAsync(newRole2).Wait();
         }
 
-        private static void AddRole(UserManager<Customer> userManager)
+        private static async void AddRole(UserManager<Customer> userManager)
         {
-            //MANUALY ADD ROLE TO USER
-            // var user1 = userManager.FindByEmailAsync("gogi@gmail.com").Result;
-            // userManager.AddToRoleAsync(user1, "User").GetAwaiter().GetResult();
-
+           
         
         }
         

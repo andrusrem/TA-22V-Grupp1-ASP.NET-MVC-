@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using KooliProjekt.Data;
+using KooliProjekt.Services;
+using System.Data;
 
 namespace KooliProjekt.Areas.Identity.Pages.Account
 {
@@ -30,6 +32,8 @@ namespace KooliProjekt.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<Customer> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUserRoleStore<Customer> _roleStore;
+
 
         public RegisterModel(
             UserManager<Customer> userManager,
@@ -44,6 +48,7 @@ namespace KooliProjekt.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleStore = GetRoleStore();
         }
 
         /// <summary>
@@ -117,12 +122,13 @@ namespace KooliProjekt.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    await _userManager.AddToRoleAsync(user, "User");
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -176,6 +182,11 @@ namespace KooliProjekt.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<Customer>)_userStore;
+        }
+         private IUserRoleStore<Customer> GetRoleStore()
+        {
+            
+            return (IUserRoleStore<Customer>)_userStore;
         }
     }
 }

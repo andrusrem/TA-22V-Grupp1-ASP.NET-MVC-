@@ -33,6 +33,7 @@ namespace KooliProjekt
             builder.Services.AddScoped<InvoiceService>();
 
             builder.Services.AddScoped<CustomerService>();
+
             //builder.Services.AddIdentity<IdentityRole<string>>();
             //builder.Services.AddScoped<RoleManager<IdentityRole>>();
             var app = builder.Build();
@@ -67,6 +68,7 @@ namespace KooliProjekt
                 var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Customer>>();
+                
                 //var roleAdd = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<string>>>();
                 SeedData.Generate(applicationDbContext, userManager, roleManager);
 

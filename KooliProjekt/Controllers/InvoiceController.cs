@@ -110,13 +110,12 @@ namespace KooliProjekt.Controllers
                 inv.Customer = _context.Users.FirstOrDefault(u => u.Email == userId);
                 inv.CustomerId = inv.Customer.Id;
                 inv.Product = _context.Products.FirstOrDefault(p => p.Id == productId);
-                inv.Order = _context.Orders.FirstOrDefault(o => o.Id == orderId);
-                inv.OrderId = orderId.Value;
+                var order = await _orderService.GetById(orderId.Value);
                 inv.ProductId = productId.Value;
                 inv.DistanceDriven = randomIntInRange;
                 inv.PayStatus = false;
                 inv.PayBy = DateTime.Today;
-                inv.WhenTaken = inv.Order.WhenTaken.Value;
+                inv.WhenTaken = order.WhenTaken.Value;
                 inv.GivenBack = DateTime.Now;
 
                 TimeSpan timeDifference = inv.GivenBack.Value.Subtract(inv.WhenTaken.Value);
@@ -126,7 +125,7 @@ namespace KooliProjekt.Controllers
                 inv.TotalPrice = Math.Round(durationInDecimal * inv.Product.TimePrice) + (inv.Product.DistancePrice * randomIntInRange);
 
                 await _invoiceService.Save(inv);
-                await _orderService.Delete(inv.OrderId.Value);
+                await _orderService.Delete(order.Id);
                 return RedirectToAction(nameof(Myinvoices));
 
                 
