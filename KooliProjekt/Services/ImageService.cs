@@ -1,13 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace KooliProjekt.Services
 {
-    public class ImageService
+    public class ImageService : IImageService
     {
         private readonly ApplicationDbContext _context;
 
-        // //public IActionResult Image(int id)
+        // public IActionResult Image(int id)
         // {
         //     var path = "/Users/andrusremets/TA-22V-Grupp1/KooliProjekt/Images/" + id + ".jpg";
         //     var stream = System.IO.File.OpenRead(path);
