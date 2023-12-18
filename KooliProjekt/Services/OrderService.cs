@@ -4,26 +4,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Immutable;
 using Microsoft.EntityFrameworkCore.Query;
+using KooliProjekt.Data.Repositories;
 
 namespace KooliProjekt.Services
 {
-    public class OrderService
+    public class OrderService : IOrderService
     {
-        private readonly ApplicationDbContext _context;
-
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IOrderRepository _orderRepository;
         
 
-        public OrderService(ApplicationDbContext context)
+        public OrderService(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+
+            _orderRepository = unitOfWork.OrderRepository;
         }
 
         public async Task<PagedResult<Order>> List(int page, int pageSize)
         {
-            var result = await _context.Orders
-                .Include(o => o.Product)
-                .Include(o => o.Customer)
-                .GetPagedAsync(page, pageSize);
+            var result = await _orderRepository.List(page, pageSize);
             return result;
 
         }
@@ -31,41 +31,41 @@ namespace KooliProjekt.Services
 
         public async Task<Order> GetById(int id)
         {
-            var order = await _context.Orders
-                .Include(o => o.Product)
-                .Include(o => o.Customer)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            
+            var order = await _orderRepository.GetById(id);
             return order;
         }
 
         public async Task Save(Order order)
         {
-            if(order.Id == 0)
+            await _unitOfWork.BeginTransaction();
+            try
             {
-                _context.Add(order);
+                await _orderRepository.Save(order);
+                await _unitOfWork.Commit();
             }
-            else
+            catch(Exception ex)
             {
-                _context.Update(order);
+                await _unitOfWork.Rollback();
             }
-            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int? id)
         {
-            var order = await _context.Orders.FindAsync(id);
-
-            if(order != null)
+            await _unitOfWork.BeginTransaction();
+            try
             {
-                _context.Orders.Remove(order);
+                await _orderRepository.Delete(id);
+                await _unitOfWork.Commit();
             }
-            await _context.SaveChangesAsync();
+            catch(Exception ex)
+            {
+                await _unitOfWork.Rollback();
+            }
         }
 
         public bool Existance(int Id)
         {
-            return _context.Orders.Any(e => e.Id == Id);
+            return _orderRepository.Existance(Id);
         }
 
         

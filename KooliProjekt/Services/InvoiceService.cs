@@ -1,66 +1,67 @@
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
+using KooliProjekt.Data.Repositories;
 
 namespace KooliProjekt.Services
 {
-    public class InvoiceService
+    public class InvoiceService : IInvoiceService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IInvoiceRepository _invoiceRepository;
 
-        public InvoiceService(ApplicationDbContext context)
+        public InvoiceService(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+            _invoiceRepository = _unitOfWork.InvoiceRepository;
         }
 
         public async Task<PagedResult<Invoice>> List(int page, int pageSize)
         {
-             var result = await _context.Invoices
-                .Include(i => i.Product)
-                .Include(i => i.Customer)
-                .GetPagedAsync(page, pageSize);
+            var result = await _invoiceRepository.List(page, pageSize);
             return result;
         }
         public async Task<Invoice> GetById(int id)
         {
-            var invoice = await _context.Invoices
-                .Include(i => i.Product)
-                .Include(i => i.Customer)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var invoice = await _invoiceRepository.GetById(id);
             return invoice;
         }
 
         public async Task Save(Invoice invoice)
         {
-            if(invoice.Id == 0)
+            await _unitOfWork.BeginTransaction();
+            try
             {
-                _context.Add(invoice);
+                await _invoiceRepository.Save(invoice);
+                await _unitOfWork.Commit();
             }
-            else
+            catch(Exception ex)
             {
-                _context.Update(invoice);
+                await _unitOfWork.Rollback();
             }
-            await _context.SaveChangesAsync();
         }
 
         public async Task<Invoice> FindId(int id)
         {
-            return await _context.Invoices.FindAsync(id);
+            return await _invoiceRepository.FindId(id);
         }
 
         public async Task Delete(int? id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
-            if (invoice != null)
+            await _unitOfWork.BeginTransaction();
+            try
             {
-                _context.Invoices.Remove(invoice);
+                await _invoiceRepository.Delete(id);
+                await _unitOfWork.Commit();
             }
-            
-            await _context.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                await _unitOfWork.Rollback();
+            }
         }
 
         public bool Existance(int id)
         {
-            return _context.Invoices.Any(e => e.Id == id);
+            return _invoiceRepository.Existance(id);
         }
 
         internal Task<string> FindId(int? id)

@@ -2,6 +2,7 @@ using KooliProjekt.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Services;
+using KooliProjekt.Data.Repositories;
 
 namespace KooliProjekt
 {
@@ -24,15 +25,16 @@ namespace KooliProjekt
             builder.Services.AddControllersWithViews();
 
                         
-            builder.Services.AddSingleton<ImageService>();
-
-            builder.Services.AddScoped<ProductService>();
-
-            builder.Services.AddScoped<OrderService>();
-
-            builder.Services.AddScoped<InvoiceService>();
-
-            builder.Services.AddScoped<CustomerService>();
+            builder.Services.AddSingleton<IImageService, ImageService>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            
+            builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+            builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //builder.Services.AddIdentity<IdentityRole<string>>();
             //builder.Services.AddScoped<RoleManager<IdentityRole>>();

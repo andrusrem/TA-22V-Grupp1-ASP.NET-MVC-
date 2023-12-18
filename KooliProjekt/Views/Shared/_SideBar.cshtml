@@ -2,8 +2,10 @@
 <div class="sidebar col-md-3 col-sm-5">
     <ul class="list-group margin-bottom-25 sidebar-menu">
         <li class="list-group-item clearfix"><a href="../"><i class="fa fa-angle-right"></i> Home</a></li>
-        <li class="list-group-item clearfix"><a href="../Order/Myorders"><i class="fa fa-angle-right"></i>My Orders</a></li>
-        <li class="list-group-item clearfix"><a href="../Invoice/Myinvoices"><i class="fa fa-angle-right"></i>My Invoices</a></li>
+        @if(User.IsInRole("User")){
+            <li class="list-group-item clearfix"><a href="../Order/Myorders"><i class="fa fa-angle-right"></i>My Orders</a></li>
+            <li class="list-group-item clearfix"><a href="../Invoice/Myinvoices"><i class="fa fa-angle-right"></i>My Invoices</a></li>
+        }
         @*<li class="list-group-item clearfix dropdown active">
         <a href="../" class="collapsed">
             <i class="fa fa-angle-right"></i>

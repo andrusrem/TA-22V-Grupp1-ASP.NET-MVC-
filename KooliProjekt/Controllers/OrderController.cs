@@ -16,15 +16,15 @@ namespace KooliProjekt.Controllers
     public class OrderController : Controller
     {
 
-        private readonly OrderService _orderService;
-        private readonly ProductService _productService;
-        private readonly CustomerService _customerService;
+        private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
+        private readonly ICustomerService _customerService;
         private readonly ApplicationDbContext _context;
-        private readonly ImageService _imageService;
+        private readonly IImageService _imageService;
 
         public string Role { get; private set; }
 
-        public OrderController(ApplicationDbContext context, ImageService imageService, OrderService orderService, ProductService productService, CustomerService customerService)
+        public OrderController(ApplicationDbContext context, IImageService imageService, IOrderService orderService, IProductService productService, ICustomerService customerService)
         {
             _orderService = orderService;
             _productService = productService;

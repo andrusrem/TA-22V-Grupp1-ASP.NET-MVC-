@@ -16,12 +16,12 @@ namespace KooliProjekt.Controllers
     {
         
 
-        private readonly ImageService _imageService;
+        private readonly IImageService _imageService;
 
-        private readonly ProductService _productService;
-        private readonly OrderService _orderService;
+        private readonly IProductService _productService;
+        private readonly IOrderService _orderService;
 
-        public ProductController(ImageService imageService, ProductService productService, OrderService orderService)
+        public ProductController(IImageService imageService, IProductService productService, IOrderService orderService)
         {
             _imageService = imageService;
             _productService = productService;
@@ -31,7 +31,7 @@ namespace KooliProjekt.Controllers
 
 
         // GET: Product
-        [Authorize(Roles = "Admin,User")]
+        
         public async Task<IActionResult> Index(int page = 1)
         {
             return View(await _productService.List(page, 5));
@@ -56,6 +56,7 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Product/Create
+        [Authorize(Roles = "Admin,User")]
         public IActionResult Create()
         {
             return View();
@@ -66,6 +67,7 @@ namespace KooliProjekt.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create([Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product, IFormFile image)
         {
             if (!ModelState.IsValid)

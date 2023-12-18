@@ -2,7 +2,7 @@ using KooliProjekt;
 
 namespace KooliProjekt.Data
 {
-    public class Invoice
+    public class Invoice : Entity
     {
         public int Id {get; set;}
         public int ProductId {get;set;}

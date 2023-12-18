@@ -2,10 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
 using System.Threading.Tasks;
 using System.Data;
+using KooliProjekt.Data.Repositories;
 
 namespace KooliProjekt.Services
 {
-    public class CustomerService
+    public class CustomerService : ICustomerService
     {
         private readonly ApplicationDbContext _context;
 

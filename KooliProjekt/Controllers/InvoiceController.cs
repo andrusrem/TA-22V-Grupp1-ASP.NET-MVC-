@@ -15,13 +15,13 @@ namespace KooliProjekt.Controllers
     {
         
 
-        private readonly InvoiceService _invoiceService;
-        private readonly ProductService _productService;
-        private readonly CustomerService _customerService;
-        private readonly OrderService _orderService;
+        private readonly IInvoiceService _invoiceService;
+        private readonly IProductService _productService;
+        private readonly ICustomerService _customerService;
+        private readonly IOrderService _orderService;
         private readonly ApplicationDbContext _context;
 
-        public InvoiceController(ApplicationDbContext context,OrderService orderService, InvoiceService invoiceService, ProductService productService, CustomerService customerService)
+        public InvoiceController(ApplicationDbContext context, IOrderService orderService, IInvoiceService invoiceService, IProductService productService, ICustomerService customerService)
         {
             _invoiceService = invoiceService;
             _productService = productService;
