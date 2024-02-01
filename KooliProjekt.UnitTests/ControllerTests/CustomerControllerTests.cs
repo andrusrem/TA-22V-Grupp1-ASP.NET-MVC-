@@ -35,8 +35,8 @@ namespace KooliProjekt.UnitTests.ControllerTests
         public async void Details_Returns_Not_Found_When_Customer_Does_Not_Exist()
         {
             // Arrange
-            string id = "1";
-            _customerService.Setup(x => x.Existance(id)).Returns(false);
+            string id = "dfegrfde";
+            _customerService.Setup(x => x.GetById(id)).ReturnsAsync((Customer?)null);
             
             // Act
             var result = await _controller.Details(id) as NotFoundResult;

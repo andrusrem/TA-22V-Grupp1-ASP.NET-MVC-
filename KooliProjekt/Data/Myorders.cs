@@ -1,5 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
 namespace KooliProjekt.Data
 {
+    [ExcludeFromCodeCoverage]
     public class Myorders
     {
         public int Id {get; set;}

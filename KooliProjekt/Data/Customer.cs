@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Identity;
+using System.Diagnostics.CodeAnalysis;
 
 namespace KooliProjekt.Data
 {
 
+    [ExcludeFromCodeCoverage]
+    
     public class Customer : IdentityUser
     {
         

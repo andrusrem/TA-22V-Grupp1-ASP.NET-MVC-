@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt.Data
 {
+    [ExcludeFromCodeCoverage]
     public class ApplicationDbContext : IdentityDbContext<Customer>
     {
         public ApplicationDbContext()

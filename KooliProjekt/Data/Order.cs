@@ -1,8 +1,10 @@
 using KooliProjekt.Data;
+using System.Diagnostics.CodeAnalysis;
 
 
 namespace KooliProjekt
 {
+    [ExcludeFromCodeCoverage]
     public class Order : Entity
     {
 

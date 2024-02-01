@@ -1,7 +1,10 @@
 using KooliProjekt;
+using System.Diagnostics.CodeAnalysis;
+
 
 namespace KooliProjekt.Data
 {
+    [ExcludeFromCodeCoverage]
     public class Invoice : Entity
     {
         public int Id {get; set;}

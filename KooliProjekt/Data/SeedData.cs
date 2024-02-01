@@ -4,9 +4,11 @@ using KooliProjekt.Controllers;
 using KooliProjekt.Services;
 using System.Security.Claims;
 using System.Web;
+using System.Diagnostics.CodeAnalysis;
 
 namespace KooliProjekt.Data
 {
+    [ExcludeFromCodeCoverage]
     
     public static class SeedData
     {

@@ -1,9 +1,12 @@
 using KooliProjekt;
+using System.Diagnostics.CodeAnalysis;
 
 namespace KooliProjekt.Data
 {
+    [ExcludeFromCodeCoverage]
     public class Myinvoice
     {
+        
         public int Id {get; set;}
         public int ProductId {get;set;}
         public string ProductName {get; set;}

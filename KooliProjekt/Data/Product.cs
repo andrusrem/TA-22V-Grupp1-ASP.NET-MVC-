@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace KooliProjekt.Data
 {
+    [ExcludeFromCodeCoverage]
     public class Product : Entity
     {
         public int Id {get; set;}
