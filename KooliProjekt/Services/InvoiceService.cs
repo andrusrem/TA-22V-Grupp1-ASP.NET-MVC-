@@ -20,6 +20,12 @@ namespace KooliProjekt.Services
             var result = await _invoiceRepository.List(page, pageSize);
             return result;
         }
+
+        public async Task<List<Invoice>> GetCustomerInvoices(string email)
+        {
+            return await _invoiceRepository.GetCustomerInvoices(email);
+        }
+
         public async Task<Invoice> GetById(int id)
         {
             var invoice = await _invoiceRepository.GetById(id);

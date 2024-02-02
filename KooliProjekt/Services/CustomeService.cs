@@ -27,6 +27,12 @@ namespace KooliProjekt.Services
                 .FirstOrDefaultAsync(m => m.Id == id);
             return customer;
         }
+        public async Task<Customer> GetByEmail(string email) {
+            var customer = await _context.Customers
+                .FirstOrDefaultAsync(m => m.UserName == email);
+            return customer;
+        }
+
 
         public async Task<IList<LookupCustomer>> Lookup()
         {

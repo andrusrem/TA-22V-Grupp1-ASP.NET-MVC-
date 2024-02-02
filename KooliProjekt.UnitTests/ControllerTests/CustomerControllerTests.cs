@@ -137,7 +137,6 @@ namespace KooliProjekt.UnitTests.ControllerTests
 
             //Assert
             Assert.NotNull(result);
-            
             // Assert.True(string.IsNullOrEmpty(result.ViewName) ||
             //             result.ViewName == "Index");
 

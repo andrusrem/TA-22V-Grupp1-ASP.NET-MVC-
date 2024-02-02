@@ -39,30 +39,20 @@ namespace KooliProjekt.Controllers
             //return View(await applicationDbContext.ToListAsync());
         }
 
-        public IActionResult Myinvoices()
+        public async Task<IActionResult> Myinvoices()
         {
-
-
-           string loggedInUsername = User.Identity.Name; // Get the logged-in username
-           
+            string loggedInUsername = User.Identity.Name; // Get the logged-in username
 
             // Retrieve the orders and the products for the logged-in user
-            List<Invoice> invoices = _context.Invoices
-                .Where(o => o.Customer.Email == loggedInUsername)
-                .Include(o => o.Customer)
-                .Include(o => o.Product)
-                .ToList();
+            List<Invoice> invoices = await _invoiceService.GetCustomerInvoices(loggedInUsername);
 
-            List<Myinvoice> myinvoices = invoices.Select(o => new Myinvoice
-            {
+            List<Myinvoice> myinvoices = invoices.Select(o => new Myinvoice {
                 Id = o.Id,
                 ProductName = o.Product.CarName,
                 TotalPrice = o.TotalPrice,
                 CustomerId = o.Customer.Name,
                 PayStatus = o.PayStatus,
                 DistanceDriven = o.DistanceDriven,
-
-
             }).ToList();
             // Map the orders and products to the ViewModel
             
@@ -107,9 +97,9 @@ namespace KooliProjekt.Controllers
 
 
                 var userId = User.Identity.Name;
-                inv.Customer = _context.Users.FirstOrDefault(u => u.Email == userId);
+                inv.Customer = await _customerService.GetByEmail(userId);
                 inv.CustomerId = inv.Customer.Id;
-                inv.Product = _context.Products.FirstOrDefault(p => p.Id == productId);
+                inv.Product = await _productService.GetById(productId.Value);
                 var order = await _orderService.GetById(orderId.Value);
                 inv.ProductId = productId.Value;
                 inv.DistanceDriven = randomIntInRange;

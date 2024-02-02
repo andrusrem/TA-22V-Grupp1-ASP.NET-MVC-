@@ -17,6 +17,17 @@ namespace KooliProjekt.Data.Repositories
                 .GetPagedAsync(page, pageSize);
             return result;
         }
+
+        public async Task<List<Invoice>> GetCustomerInvoices(string email)
+        {
+            var result = await Context.Invoices
+                .Where(o => o.Customer.Email == email)
+                .Include(o => o.Customer)
+                .Include(o => o.Product)
+                .ToListAsync();
+            return result;
+        }
+
         public async Task<Invoice> GetById(int id)
         {
             var invoice = await Context.Invoices
