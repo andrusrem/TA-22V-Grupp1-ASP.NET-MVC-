@@ -261,7 +261,7 @@ namespace KooliProjekt.UnitTests.ControllerTests
             var catched = false;
             try {
                 var result = await _controller.Edit(id, product, null) as RedirectToActionResult;
-            } catch(DBConcurrencyException) {
+            } catch(DbUpdateConcurrencyException) {
                 catched = true;
             }
             
