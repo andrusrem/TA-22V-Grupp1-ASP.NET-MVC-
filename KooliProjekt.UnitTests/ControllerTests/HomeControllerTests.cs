@@ -2,6 +2,10 @@
 using KooliProjekt.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Microsoft.AspNetCore.Http;
+using KooliProjekt.Models;
+using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace KooliProjekt.UnitTests.ControllerTests
 {
@@ -41,5 +45,44 @@ namespace KooliProjekt.UnitTests.ControllerTests
                         result.ViewName == "Privacy");
         }
 
+       [Fact]
+        public void Error_should_return_error_view_with_current_trace_identifier() {
+            // Arrange
+            var controller = new HomeController();
+            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            // Act
+            var result = controller.Error() as ViewResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Model);
+        }
+
+        [Fact]
+        public void Error_should_return_error_view_with_current_activity() {
+            // Arrange
+            var controller = new HomeController();
+            new Activity("TestActivity").Start();
+
+            // Act
+            var result = controller.Error() as ViewResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Model);
+        }
+
+        [Fact]
+        public void Construct_With_Logger() {
+            // Arrange
+            var logger = new Mock<ILogger<HomeController>>();
+
+            // Act
+            var controller = new HomeController(logger.Object);
+
+            // Assert
+            Assert.NotNull(controller);
+        }
     }
 }
