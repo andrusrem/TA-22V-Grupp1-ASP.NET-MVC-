@@ -4,6 +4,7 @@ using KooliProjekt.Data;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace KooliProjekt.UnitTests.ControllerTests
 {
@@ -36,7 +37,10 @@ namespace KooliProjekt.UnitTests.ControllerTests
         {
             // Arrange
             string id = "dfegrfde";
-            _customerService.Setup(x => x.GetById(id)).ReturnsAsync((Customer?)null);
+            var customer = new Customer();
+            customer = null;
+            _customerService.Setup(x => x.Existance(id)).Returns(true);
+            _customerService.Setup(x => x.GetById(id)).ReturnsAsync(customer);
             
             // Act
             var result = await _controller.Details(id) as NotFoundResult;
@@ -82,8 +86,11 @@ namespace KooliProjekt.UnitTests.ControllerTests
         public async Task Edit_returns_not_found_if_customer_does_not_exist()
         {
             // A
-            string id = "r";
-            _customerService.Setup(x => x.Existance(id)).Returns(false);
+            string id = "1";
+            var customer = new Customer();
+            customer = null;
+            _customerService.Setup(x => x.Existance(id)).Returns(true);
+            _customerService.Setup(x => x.GetById(id)).ReturnsAsync(customer);
 
             // Act
             var result = await _controller.Edit(id) as NotFoundResult;
@@ -119,18 +126,50 @@ namespace KooliProjekt.UnitTests.ControllerTests
             var customer = new Customer();
             _customerService.Setup(x => x.Existance(id)).Returns(true);
             _customerService.Setup(x => x.GetById(id)).ReturnsAsync(customer);
+            customer.Id = id;
             customer.City = "Tallinn";
+
             _customerService.Setup(x => x.Save(id, customer));
 
             //Act
-            var result = await _controller.Edit(id, customer);
+            var result = await _controller.Edit(id, customer) as ViewResult;
 
 
             //Assert
-            Assert.IsType<ViewResult>(result);
+            Assert.NotNull(result);
+            
             // Assert.True(string.IsNullOrEmpty(result.ViewName) ||
             //             result.ViewName == "Index");
 
+
+        }
+
+        [Fact]
+        public async Task Edit_retruns_not_found_if_customerId_not_equal_id()
+        {
+            //Arrange
+            string id = "1";
+            var customer = new Customer();
+            customer.Id = "2";
+            
+
+            //Act
+            var result = await _controller.Edit(id, customer) as NotFoundResult;
+
+            //Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void AdminPanel_return_view_if_customer_is_Admin()
+        {
+            //Arrange
+            
+            
+            //Act
+            var result = _controller.AdminPanel() as ViewResult;
+            //Assert
+            Assert.NotNull(result);
 
         }
 
