@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Principal;
 using NuGet.Protocol;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt.UnitTests.ControllerTests
 {
@@ -251,6 +252,137 @@ namespace KooliProjekt.UnitTests.ControllerTests
             // Assert
             Assert.NotNull(result);
             Assert.Equal("Myinvoices", result.ActionName);
+            _invoiceService.VerifyAll();
+        }
+
+        [Fact]
+        public async void EditConfirmed_Invalid_Id_NotFound() {
+            // Arrange
+            int id = 1;
+            var invoice = new Invoice { Id = 2 };
+            
+            // Act
+            var result = await _controller.Edit(id, invoice) as NotFoundResult;
+            
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async void EditConfirmed_Invalid_ModelState_Return_View() {
+            // Arrange
+            var invoice = new Invoice { Id = 1 };
+            _controller.ModelState.AddModelError(nameof(Invoice), "error");
+            _productService.Setup(x => x.Lookup()).ReturnsAsync(new List<LookupItem>());
+            _customerService.Setup(x => x.Lookup()).ReturnsAsync(new List<LookupCustomer>());
+            
+            // Act
+            var result = await _controller.Edit(invoice.Id, invoice) as ViewResult;
+            
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async void EditConfirmed_Save_And_Redirect_To_Index() {
+            // Arrange
+            var invoice = new Invoice { Id = 1 };
+            _invoiceService.Setup(x => x.Save(invoice)).Verifiable();
+            
+            // Act
+            var result = await _controller.Edit(invoice.Id, invoice) as RedirectToActionResult;
+            
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal("Index", result.ActionName);
+            _invoiceService.VerifyAll();
+        }
+
+        [Fact]
+        public async void EditConfirmed_Fail_Save_With_Non_Existent_Invoice_And_Return_NotFound() {
+            // Arrange
+            var invoice = new Invoice { Id = 1 };
+            _invoiceService.Setup(x => x.Save(invoice)).Throws(new DbUpdateConcurrencyException());
+            _invoiceService.Setup(x => x.Existance(invoice.Id)).Returns(false);
+            
+            // Act
+            var result = await _controller.Edit(invoice.Id, invoice) as NotFoundResult;
+            
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async void EditConfirmed_Fail_Save_And_Catch_Error() {
+            // Arrange
+            var invoice = new Invoice { Id = 1 };
+            _invoiceService.Setup(x => x.Save(invoice)).Throws(new DbUpdateConcurrencyException());
+            _invoiceService.Setup(x => x.Existance(invoice.Id)).Returns(true);
+            
+            // Act
+            var catched = false;
+            try {
+                var result = await _controller.Edit(invoice.Id, invoice) as RedirectToActionResult;
+            } catch (DbUpdateConcurrencyException) {
+                catched = true;
+            }
+            
+            // Assert
+            Assert.True(catched);
+        }
+
+        [Fact]
+        public async void Delete_Without_Id_Return_NotFound() {
+            // Arrange
+            int? id = null;
+            
+            // Act
+            var result = await _controller.Delete(id) as NotFoundResult;
+            
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async void Delete_Non_Existent_Invoice_Return_NotFound() {
+            // Arrange
+            int id = 1;
+            _invoiceService.Setup(x => x.Existance(id)).Returns(true);
+            _invoiceService.Setup(x => x.GetById(id)).ReturnsAsync(null as Invoice);
+            
+            // Act
+            var result = await _controller.Delete(id) as NotFoundResult;
+            
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async void Delete_Return_View() {
+            // Arrange
+            int id = 1;
+            _invoiceService.Setup(x => x.Existance(id)).Returns(true);
+            _invoiceService.Setup(x => x.GetById(id)).ReturnsAsync(new Invoice());
+            
+            // Act
+            var result = await _controller.Delete(id) as ViewResult;
+            
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async void DeleteConfirmed_Redirect_To_Action() {
+            // Arrange
+            int id = 1;
+            _invoiceService.Setup(x => x.Delete(id)).Verifiable();
+            
+            // Act
+            var result = await _controller.DeleteConfirmed(id) as RedirectToActionResult;
+            
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal("Index", result.ActionName);
             _invoiceService.VerifyAll();
         }
     }
