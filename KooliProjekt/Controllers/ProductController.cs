@@ -149,13 +149,6 @@ namespace KooliProjekt.Controllers
                         await _imageService.UpdateImage(product.Id, stream);
                     }
                 }
-                else if (image == null)
-                {
-                    using(var stream = image.OpenReadStream())
-                    {
-                        await _imageService.WriteImage(product.Id, stream);
-                    }
-                }
  
                 
                 return RedirectToAction(nameof(Index));

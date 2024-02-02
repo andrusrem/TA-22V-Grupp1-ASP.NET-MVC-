@@ -26,7 +26,7 @@ namespace KooliProjekt.Services
             return System.IO.Path.Join(GetImagesDir(), Id + ".jpg");
         }
 
-        public FileStream ReadImage(int Id)
+        public Stream ReadImage(int Id)
         {
             return System.IO.File.OpenRead(GetImagePath(Id));
         }
