@@ -19,6 +19,15 @@ namespace KooliProjekt.Data.Repositories
             return result;
 
         }
+        public async Task<List<Order>> GetCustomerOrders(string email)
+        {
+            var result = await Context.Orders
+                .Where(o => o.Customer.Email == email)
+                .Include(o => o.Customer)
+                .Include(o => o.Product)
+                .ToListAsync();
+            return result;
+        }
         
 
         public async Task<Order> GetById(int id)

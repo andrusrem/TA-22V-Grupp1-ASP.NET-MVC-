@@ -4,6 +4,11 @@ using KooliProjekt.Data;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Security.Principal;
 
 namespace KooliProjekt.UnitTests.ControllerTests
 {
@@ -29,7 +34,53 @@ namespace KooliProjekt.UnitTests.ControllerTests
                                                 _productService.Object,
                                                 _customerService.Object);
         }
-        
+
+        [Fact]
+        public async Task Index_return_listed_View()
+        {
+            //Arrange
+            var page = 1;
+            var pageSize = 10;
+            _orderService.Setup(x => x.List(page, pageSize)).Verifiable();
+
+            //Act
+            var result = await _controller.Index(page) as ViewResult;
+
+            //Assert
+            Assert.NotNull(result);
+        }
+        [Fact]
+        public void Image_return_image()
+        {
+            //Arrange
+            int id = 1;
+            var stream = new Mock<Stream>();
+            _imageService.Setup(x => x.ReadImage(id)).Returns(stream.Object);
+
+            //Act
+            var result = _controller.Image(id) as FileResult;
+
+            //Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task MyOrders_return_LoggedInUser_Orders_View()
+        {
+            //Arrange
+             _controller.ControllerContext.HttpContext = new DefaultHttpContext() {
+                User = new GenericPrincipal(new GenericIdentity("testuser"), null)};
+            _orderService.Setup(x => x.GetCustomerOrders("testuser")).ReturnsAsync(new List<Order>());
+
+            //Act
+            var result = await _controller.Myorders() as ViewResult;
+
+            //Assert
+            Assert.NotNull(result);
+            
+        }
+
+
         [Fact]
         public async void Details_Returns_Not_Found_When_Id_Is_Missing()
         {
@@ -48,7 +99,8 @@ namespace KooliProjekt.UnitTests.ControllerTests
         {
             // Arrange
             int id = 1;
-            _orderService.Setup(x => x.Existance(id)).Returns(false);
+            _orderService.Setup(x => x.Existance(id)).Returns(true);
+            _orderService.Setup(x => x.GetById(id)).ReturnsAsync((Order?)null);
             
             // Act
             var result = await _controller.Details(id) as NotFoundResult;
@@ -73,6 +125,9 @@ namespace KooliProjekt.UnitTests.ControllerTests
             Assert.NotNull(result);
             Assert.Equal(order, result.Model);
         }
+
+        // [Fact]
+        // public async Task Details_return_NotFound_
 
         // [Fact]
         // public async Task Create_returns_view_and_model()

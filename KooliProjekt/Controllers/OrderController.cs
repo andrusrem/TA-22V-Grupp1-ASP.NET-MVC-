@@ -48,7 +48,7 @@ namespace KooliProjekt.Controllers
             
         }
 
-        public IActionResult Myorders()
+        public async Task<IActionResult> Myorders()
         {
 
 
@@ -56,11 +56,7 @@ namespace KooliProjekt.Controllers
 
 
             // Retrieve the orders and the products for the logged-in user
-            List<Order> orders = _context.Orders
-                .Where(o => o.Customer.Email == loggedInUsername)
-                .Include(o => o.Customer)
-                .Include(o => o.Product)
-                .ToList();
+            List<Order> orders = await _orderService.GetCustomerOrders(loggedInUsername);
 
             List<Myorders> myorders = orders.Select(o => new Myorders
             {

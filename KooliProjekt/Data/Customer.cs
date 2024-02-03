@@ -17,10 +17,12 @@ namespace KooliProjekt.Data
         public string Country {get; set;}
 
         public IList<Invoice> Invoices {get; set;}
+        public IList<Order> Orders {get; set;}
 
         public Customer()
         {
             Invoices = new List<Invoice>();
+            Orders = new List<Order>();
         }
 
     }

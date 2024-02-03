@@ -27,6 +27,12 @@ namespace KooliProjekt.Services
             return result;
 
         }
+
+        public async Task<List<Order>> GetCustomerOrders(string email)
+        {
+            var result = await _orderRepository.GetCustomerOrders(email);
+            return result;
+        }
         
 
         public async Task<Order> GetById(int id)
