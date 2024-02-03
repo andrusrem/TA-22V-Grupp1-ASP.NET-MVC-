@@ -99,11 +99,11 @@ namespace KooliProjekt.Controllers
             { 
                 var userId = User.Identity.Name;
                 
-                r.Customer = _context.Users.FirstOrDefault(u => u.Email == userId);
+                r.Customer = await _customerService.GetByEmail(userId);
                 r.CustomerId = r.Customer.Id;
                 r.ProductId = productId.Value;
                 r.WhenTaken = DateTime.Now;
-                r.Product = _context.Products.FirstOrDefault(p => p.Id == productId);
+                r.Product = await _productService.GetById(productId.Value);
                 r.ProductEstimatedPrice = r.Product.EstimatedPrice;
                 ViewData["ProductId"] = r.Product.CarName;
                 ViewData["CustomerId"] = r.Customer.Name;
