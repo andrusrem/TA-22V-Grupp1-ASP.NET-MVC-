@@ -18,12 +18,13 @@ namespace KooliProjekt.Controllers
 
         public CustomerApiController(ICustomerService customerService)
         {
+
             _customerService = customerService;
         }
 
         // GET: api/CustomerApi
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IList<Customer>>> GetCustomers()
         {
             return await _customerService.GetCustomerAsync();
         }
