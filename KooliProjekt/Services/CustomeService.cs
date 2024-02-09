@@ -81,5 +81,21 @@ namespace KooliProjekt.Services
         {
             return _context.Customers.Any(e => e.Id == id);
         }
+
+        public async Task Add(Customer customer)
+        {
+            _context.Customers.Add(customer);
+            
+            
+            await _context.SaveChangesAsync();
+            
+        }
+        public async Task Entry(string id, Customer customer)
+        {
+            _context.Entry(customer).State = EntityState.Modified;
+            
+            await _context.SaveChangesAsync();
+            
+        }
     }
 }

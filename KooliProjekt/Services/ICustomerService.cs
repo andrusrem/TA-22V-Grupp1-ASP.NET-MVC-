@@ -10,5 +10,7 @@ namespace KooliProjekt.Services
         Task Save(string id, Customer customer);
         Task Delete(string id);
         bool Existance(string id);
+        Task Add(Customer customer);
+        Task Entry(string id, Customer customer);
     }
 }
