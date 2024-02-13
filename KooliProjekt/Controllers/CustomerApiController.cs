@@ -59,7 +59,7 @@ namespace KooliProjekt.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CustomerExists(id))
+                if (!_customerService.Existance(id))
                 {
                     return NotFound();
                 }
@@ -111,9 +111,6 @@ namespace KooliProjekt.Controllers
             return NoContent();
         }
 
-        private bool CustomerExists(string id)
-        {
-            return _customerService.Existance(id);
-        }
+        
     }
 }

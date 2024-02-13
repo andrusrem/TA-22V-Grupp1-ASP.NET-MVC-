@@ -8,13 +8,17 @@ namespace KooliProjekt.Data.Repositories
         {
             
         }
-         public async Task<PagedResult<Product>> List(int page, int pageSize)
+        public async Task<PagedResult<Product>> List(int page, int pageSize)
         {
             var result = await Context.Products.GetPagedAsync(page, pageSize);
             return result;
 
         }
 
+        public async Task<List<Product>> GetAllProducts()
+        {
+            return await Context.Products.ToListAsync();
+        }
         public async Task<Product> GetById(int Id)
         {
             var product = await Context.Products
@@ -64,6 +68,16 @@ namespace KooliProjekt.Data.Repositories
         public bool Existance(int Id)
         {
             return Context.Products.Any(e => e.Id == Id);
+        }
+        public async Task Add(Product product)
+        {
+            Context.Products.Add(product);
+            await Context.SaveChangesAsync();
+        }
+        public async Task Entry(Product product)
+        {
+            Context.Entry(product).State = EntityState.Modified;
+            await Context.SaveChangesAsync();
         }
     }
 }

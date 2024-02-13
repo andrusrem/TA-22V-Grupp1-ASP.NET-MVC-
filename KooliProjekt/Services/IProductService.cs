@@ -10,5 +10,8 @@ namespace KooliProjekt.Services
         Task Delete(int Id);
         Task<IList<LookupItem>> Lookup();
         bool Existance(int Id);
+        Task Add(Product product);
+        Task Entry(Product product);
+        Task<List<Product>> GetAllProducts();
     }
 }

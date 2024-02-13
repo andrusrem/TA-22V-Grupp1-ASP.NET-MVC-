@@ -75,6 +75,20 @@ namespace KooliProjekt.Data.Repositories
         {
             throw new NotImplementedException();
         }
+        public async Task Add(Invoice invoice)
+        {
+            Context.Invoices.Add(invoice);
+            await Context.SaveChangesAsync();
+        }
+        public async Task Entry(Invoice invoice)
+        {
+            Context.Entry(invoice).State = EntityState.Modified;
+            await Context.SaveChangesAsync();
+        }
+        public async Task<List<Invoice>> GetAllInvoices()
+        {
+            return await Context.Invoices.ToListAsync();
+        }
     }
 
 

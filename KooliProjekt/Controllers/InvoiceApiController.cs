@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
@@ -13,25 +14,32 @@ namespace KooliProjekt.Controllers
     [ApiController]
     public class InvoiceApiController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IInvoiceService _invoiceService;
+        private readonly IProductService _productService;
+        private readonly ICustomerService _customerService;
+        private readonly IOrderService _orderService;
 
-        public InvoiceApiController(ApplicationDbContext context)
+
+        public InvoiceApiController(IOrderService orderService, IInvoiceService invoiceService, IProductService productService, ICustomerService customerService)
         {
-            _context = context;
+            _invoiceService = invoiceService;
+            _productService = productService;
+            _customerService = customerService;
+            _orderService = orderService;
         }
 
         // GET: api/InvoiceApi
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices()
+        public async Task<ActionResult<IList<Invoice>>> GetInvoices()
         {
-            return await _context.Invoices.ToListAsync();
+            return await _invoiceService.GetAllInvoices();
         }
 
         // GET: api/InvoiceApi/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Invoice>> GetInvoice(int id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = await _invoiceService.GetById(id);
 
             if (invoice == null)
             {
@@ -51,15 +59,13 @@ namespace KooliProjekt.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(invoice).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _invoiceService.Entry(invoice);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!InvoiceExists(id))
+                if (!_invoiceService.Existance(id))
                 {
                     return NotFound();
                 }
@@ -77,8 +83,7 @@ namespace KooliProjekt.Controllers
         [HttpPost]
         public async Task<ActionResult<Invoice>> PostInvoice(Invoice invoice)
         {
-            _context.Invoices.Add(invoice);
-            await _context.SaveChangesAsync();
+            await _invoiceService.Add(invoice);
 
             return CreatedAtAction("GetInvoice", new { id = invoice.Id }, invoice);
         }
@@ -87,21 +92,16 @@ namespace KooliProjekt.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInvoice(int id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = await _invoiceService.GetById(id);
             if (invoice == null)
             {
                 return NotFound();
             }
 
-            _context.Invoices.Remove(invoice);
-            await _context.SaveChangesAsync();
+            
+            await _invoiceService.Delete(id);
 
             return NoContent();
-        }
-
-        private bool InvoiceExists(int id)
-        {
-            return _context.Invoices.Any(e => e.Id == id);
         }
     }
 }

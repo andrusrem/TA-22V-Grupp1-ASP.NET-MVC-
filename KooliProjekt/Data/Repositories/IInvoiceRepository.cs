@@ -9,6 +9,9 @@ namespace KooliProjekt.Data.Repositories
         Task<Invoice> FindId(int id);
         Task Delete(int? id);
         bool Existance(int id);
+        Task Add(Invoice invoice);
+        Task Entry(Invoice invoice);
+        Task<List<Invoice>> GetAllInvoices();
         
     }
 }

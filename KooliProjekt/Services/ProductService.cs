@@ -26,6 +26,11 @@ namespace KooliProjekt.Services
 
         }
 
+        public async Task<List<Product>> GetAllProducts()
+        {
+            return await _productRepository.GetAllProducts();
+        }
+
         public async Task<Product> GetById(int Id)
         {
             var product = await _productRepository.GetById(Id);
@@ -74,5 +79,13 @@ namespace KooliProjekt.Services
             return _productRepository.Existance(Id);
         }
         
+        public async Task Add(Product product)
+        {
+            await _productRepository.Add(product);
+        }
+        public async Task Entry(Product product)
+        {
+            await _productRepository.Entry(product);
+        }
     }
 }

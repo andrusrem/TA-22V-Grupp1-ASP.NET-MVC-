@@ -74,5 +74,18 @@ namespace KooliProjekt.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task Add(Invoice invoice)
+        {
+            await _invoiceRepository.Add(invoice);
+        }
+        public async Task Entry(Invoice invoice)
+        {
+            await _invoiceRepository.Entry(invoice);
+        }
+        public async Task<List<Invoice>> GetAllInvoices()
+        {
+            return await _invoiceRepository.GetAllInvoices();
+        }
     }
 }
