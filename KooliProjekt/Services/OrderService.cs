@@ -28,6 +28,11 @@ namespace KooliProjekt.Services
 
         }
 
+        public async Task<List<Order>> GetAllOrders()
+        {
+            return await _orderRepository.GetAllOrders();
+        }
+
         public async Task<List<Order>> GetCustomerOrders(string email)
         {
             var result = await _orderRepository.GetCustomerOrders(email);
@@ -74,6 +79,15 @@ namespace KooliProjekt.Services
             return _orderRepository.Existance(Id);
         }
 
+        public async Task Entry(Order order)
+        {
+            await _orderRepository.Entry(order);
+        }
+
+        public async Task Add(Order order)
+        {
+            await _orderRepository.Add(order);
+        }
         
     }
 }

@@ -5,11 +5,14 @@ namespace KooliProjekt.Services
     public interface IOrderService
     {
         Task<PagedResult<Order>> List(int page, int pageSize);
+        Task<List<Order>> GetAllOrders();
         Task<List<Order>> GetCustomerOrders(string email);
         Task<Order> GetById(int id);
         Task Save(Order order);
         Task Delete(int? id);
         bool Existance(int id);
+        Task Entry(Order order);
+        Task Add(Order order);
         
     }
 }

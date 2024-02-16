@@ -19,6 +19,10 @@ namespace KooliProjekt.Data.Repositories
             return result;
 
         }
+        public async Task<List<Order>> GetAllOrders()
+        {
+            return await Context.Orders.ToListAsync();
+        }
         public async Task<List<Order>> GetCustomerOrders(string email)
         {
             var result = await Context.Orders
@@ -68,6 +72,18 @@ namespace KooliProjekt.Data.Repositories
         public bool Existance(int Id)
         {
             return Context.Orders.Any(e => e.Id == Id);
+        }
+
+        public async Task Entry(Order order)
+        {
+            Context.Entry(order).State = EntityState.Modified;
+            await Context.SaveChangesAsync();
+        }
+
+        public async Task Add(Order order)
+        {
+            Context.Orders.Add(order);
+            await Context.SaveChangesAsync();
         }
 
         

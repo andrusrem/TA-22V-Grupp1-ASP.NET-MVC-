@@ -30,6 +30,7 @@ namespace KooliProjekt
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<TunniTeenuseKlass>();
             
             builder.Services.AddScoped<IInvoiceService, InvoiceService>();
             builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
