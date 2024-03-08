@@ -8,10 +8,7 @@ namespace KooliProjekt.Data
     [ExcludeFromCodeCoverage]
     public class ApplicationDbContext : IdentityDbContext<Customer>
     {
-        public ApplicationDbContext()
-        {
-        }
-
+       
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
