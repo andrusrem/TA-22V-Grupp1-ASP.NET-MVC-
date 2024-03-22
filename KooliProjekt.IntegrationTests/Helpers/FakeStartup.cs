@@ -1,8 +1,10 @@
 ﻿using System;
 using KooliProjekt.Controllers;
 using KooliProjekt.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +41,15 @@ namespace KooliProjekt.IntegrationTests.Helpers
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+                        options =>
+                        {
+                            options.LoginPath = new PathString("/auth/login");
+                            options.AccessDeniedPath = new PathString("/auth/denied");
+                        });
+            services.AddAuthorization();
 
             //services.AddAutoMapper(GetType().Assembly);
             services.AddControllersWithViews()
