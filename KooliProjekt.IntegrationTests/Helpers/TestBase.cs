@@ -58,6 +58,7 @@ namespace KooliProjekt.IntegrationTests.Helpers
             DisposeFactory();
 
             Factory = Factory.WithAuthentication(provider);
+            GetDbContext().Database.EnsureCreated();
         }
 
         public void Dispose()
