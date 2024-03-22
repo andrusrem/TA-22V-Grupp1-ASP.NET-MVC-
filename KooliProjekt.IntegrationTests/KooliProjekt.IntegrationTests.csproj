@@ -34,9 +34,6 @@
     </PackageReference>
     <PackageReference Include="XunitXml.TestLogger" Version="2.1.26" />
   </ItemGroup>
-   <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KooliProjekt\KooliProjekt.csproj" />
   </ItemGroup>
