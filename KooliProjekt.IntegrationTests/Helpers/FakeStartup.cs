@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.IntegrationTests.Helpers
 {
@@ -30,10 +31,20 @@ namespace KooliProjekt.IntegrationTests.Helpers
             services.AddDefaultIdentity<Customer>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
+            
+            services.AddSingleton<IImageService, ImageService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<TunniTeenuseKlass>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //services.AddAutoMapper(GetType().Assembly);
             services.AddControllersWithViews()
                     .AddApplicationPart(typeof(HomeController).Assembly);
+            services.AddControllersWithViews()
+                    .AddApplicationPart(typeof(CustomerController).Assembly);
 
             //services.AddScoped<IFileClient, LocalFileClient>();
         }

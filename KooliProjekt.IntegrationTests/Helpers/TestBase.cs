@@ -12,6 +12,7 @@ namespace KooliProjekt.IntegrationTests.Helpers
         {
             Factory = new TestApplicationFactory<FakeStartup>();
         }
+        
 
         public void Dispose()
         {
