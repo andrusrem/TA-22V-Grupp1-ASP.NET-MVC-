@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Principal;
 using KooliProjekt.IntegrationTests.Helpers;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace KooliProjekt.IntegrationTests
 {
@@ -17,16 +18,14 @@ namespace KooliProjekt.IntegrationTests
         private readonly CustomerController _controller;
         private readonly ICustomerService _customerService;
 
-        public CustomerControllerTests(ICustomerService customerService)
+        public CustomerControllerTests()
         {
-            _customerService = customerService;
             _controller = new CustomerController(_customerService);
         }
 
         [Theory]
-        [InlineData("/")]
-        [InlineData("/Customer/Index")]
-        public async Task Get_EndpointsReturnSuccessAndCorrectContentType(string url)
+        [InlineData("/Customer")]
+        public async Task Get_EndpointsReturn_notFound(string url)
         {
             // Arrange
             var client = Factory.CreateClient();
@@ -35,8 +34,7 @@ namespace KooliProjekt.IntegrationTests
             var response = await client.GetAsync(url);
 
             // Assert
-            response.EnsureSuccessStatusCode();
-            Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
     

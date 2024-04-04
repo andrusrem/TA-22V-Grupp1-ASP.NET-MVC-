@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using KooliProjekt.Data;
 using KooliProjekt.Services;
 using System.Data;
+using SQLitePCL;
 
 namespace KooliProjekt.Areas.Identity.Pages.Account
 {
@@ -33,6 +34,7 @@ namespace KooliProjekt.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IUserRoleStore<Customer> _roleStore;
+        private readonly ApplicationDbContext _context;
 
 
         public RegisterModel(
@@ -40,7 +42,8 @@ namespace KooliProjekt.Areas.Identity.Pages.Account
             IUserStore<Customer> userStore,
             SignInManager<Customer> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,6 +52,7 @@ namespace KooliProjekt.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleStore = GetRoleStore();
+            _context = context;
         }
 
         /// <summary>
@@ -128,7 +132,9 @@ namespace KooliProjekt.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    
                     await _userManager.AddToRoleAsync(user, "User");
+                    
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

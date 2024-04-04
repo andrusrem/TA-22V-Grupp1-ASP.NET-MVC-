@@ -5,6 +5,7 @@ using KooliProjekt.Services;
 using System.Security.Claims;
 using System.Web;
 using System.Diagnostics.CodeAnalysis;
+using SQLitePCL;
 
 namespace KooliProjekt.Data
 {
@@ -18,12 +19,12 @@ namespace KooliProjekt.Data
             applicationDbContext.Database.EnsureCreated();
             
 
-            GenerateProduct(applicationDbContext);
-            GenerateOrder(applicationDbContext);
-            GenerateInvoice(applicationDbContext);
+            // GenerateProduct(applicationDbContext);
+            // GenerateOrder(applicationDbContext);
+            // GenerateInvoice(applicationDbContext);
             
             GenerateRole(roleManager);
-            AddRole(userManager);
+            AddRole(userManager, applicationDbContext);
 
             applicationDbContext.SaveChanges();
 
@@ -91,9 +92,10 @@ namespace KooliProjekt.Data
             roleManager.CreateAsync(newRole2).Wait();
         }
 
-        private static async void AddRole(UserManager<Customer> userManager)
+        private static async void AddRole(UserManager<Customer> userManager, ApplicationDbContext context)
         {
-           
+            var user = context.Customers.Where(u => u.Email == "admin@admin.com").FirstOrDefault();
+           await userManager.AddToRoleAsync(user, "Admin");
         
         }
         
