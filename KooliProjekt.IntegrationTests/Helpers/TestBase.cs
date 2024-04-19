@@ -15,8 +15,12 @@ namespace KooliProjekt.IntegrationTests.Helpers
         {
             Factory = new TestApplicationFactory<FakeStartup>();
         }
-        
 
+
+        protected void AuthenticateAnonymous()
+        {
+            SwitchFactory(new TestClaimsProvider());
+        }
         protected void AuthenticateAdmin()
         {
             SwitchFactory(TestClaimsProvider.WithAdminClaims());

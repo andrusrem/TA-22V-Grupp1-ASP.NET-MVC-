@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using KooliProjekt.Services;
+using KooliProjekt.Data.Repositories;
 
 namespace KooliProjekt.IntegrationTests.Helpers
 {
@@ -40,6 +41,9 @@ namespace KooliProjekt.IntegrationTests.Helpers
             services.AddScoped<TunniTeenuseKlass>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -56,6 +60,12 @@ namespace KooliProjekt.IntegrationTests.Helpers
                     .AddApplicationPart(typeof(HomeController).Assembly);
             services.AddControllersWithViews()
                     .AddApplicationPart(typeof(CustomerController).Assembly);
+            services.AddControllersWithViews()
+                    .AddApplicationPart(typeof(InvoiceController).Assembly);
+            services.AddControllersWithViews()
+                    .AddApplicationPart(typeof(ProductController).Assembly);
+            services.AddControllersWithViews()
+                    .AddApplicationPart(typeof(OrderController).Assembly);
 
             //services.AddScoped<IFileClient, LocalFileClient>();
         }

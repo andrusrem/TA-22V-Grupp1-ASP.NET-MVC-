@@ -34,6 +34,7 @@ namespace KooliProjekt.Controllers
             return View();
         }
         // GET: Customer/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null || !_customerService.Existance(id))
@@ -50,8 +51,9 @@ namespace KooliProjekt.Controllers
             return View(customer);
         }
 
-        
+
         // GET: Customer/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null || !_customerService.Existance(id))
@@ -70,6 +72,7 @@ namespace KooliProjekt.Controllers
         // POST: Customer/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, Customer customer)
@@ -102,6 +105,7 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Customer/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null || !_customerService.Existance(id))

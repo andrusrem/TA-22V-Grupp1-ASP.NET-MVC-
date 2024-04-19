@@ -18,7 +18,10 @@ namespace KooliProjekt.IntegrationTests.Helpers
                     services.AddAuthentication("Test")
                             .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", op => { });
 
-                    services.AddScoped(_ => claimsProvider);
+                    if (claimsProvider != null)
+                    {
+                        services.AddScoped(_ => claimsProvider);
+                    }
                 });
             });
         }
