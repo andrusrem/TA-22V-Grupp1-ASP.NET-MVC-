@@ -76,10 +76,9 @@ namespace KooliProjekt.UnitTests.ControllerTests
         [Fact]
         public void Construct_With_Logger() {
             // Arrange
-            var logger = new Mock<ILogger<HomeController>>();
 
             // Act
-            var controller = new HomeController(logger.Object);
+            var controller = new HomeController();
 
             // Assert
             Assert.NotNull(controller);

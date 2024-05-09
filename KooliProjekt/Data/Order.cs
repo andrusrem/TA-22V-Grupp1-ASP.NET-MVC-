@@ -7,8 +7,6 @@ namespace KooliProjekt
     [ExcludeFromCodeCoverage]
     public class Order : Entity
     {
-
-        public int Id {get; set;}
         public int ProductId {get;set;}
         public decimal ProductEstimatedPrice { get; set; }
         public DateTime? WhenTaken {get; set;}

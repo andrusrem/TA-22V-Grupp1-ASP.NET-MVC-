@@ -8,28 +8,27 @@ namespace KooliProjekt.Services
 {
     public class CustomerService : ICustomerService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomerService(ApplicationDbContext context)
+        public CustomerService(ICustomerRepository customerRepository)
         {
-            _context = context;
+            _customerRepository = customerRepository;
+
         }
 
         public async Task<List<Customer>> GetCustomerAsync()
         {
             
-            var query = _context.Customers.AsQueryable();
-            return await query.ToListAsync();
+            var list = await _customerRepository.List();
+            return list;
         }
         public async Task<Customer> GetById(string id)
         {
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var customer = await _customerRepository.GetById(id);
             return customer;
         }
         public async Task<Customer> GetByEmail(string email) {
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.UserName == email);
+            var customer = await _customerRepository.GetByEmail(email);
             return customer;
         }
 
@@ -37,64 +36,31 @@ namespace KooliProjekt.Services
         public async Task<IList<LookupCustomer>> Lookup()
         {
             
-            return await _context.Customers
-                .OrderBy(c => c.Name)
-                .Select(c => new LookupCustomer{
-                    Id = c.Id,
-                    Name = c.Name,
-                }).ToListAsync();
+            return await _customerRepository.Lookup(); 
         }
 
         public async Task Save(string id, Customer customer)
         {
-            var customerDb = _context.Customers.FirstOrDefault(x => x.Id ==id);
-            customerDb.Name = customer.Name;
-            customerDb.UserName = customer.UserName;
-            customerDb.Phone = customer.Phone;
-            customerDb.Address = customer.Address;
-            customerDb.City = customer.City;
-            customerDb.Postcode = customer.Postcode;
-            customerDb.Country = customer.Country;
-            
-            if(customer.Id != null)
-            {
-                _context.Update(customerDb);
-            }
-            else
-            {
-                _context.Add(customerDb);
-            }
-            await _context.SaveChangesAsync();
+            await _customerRepository.Save(id, customer);
         }
 
         public async Task Delete(string id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer != null)
-            {
-                _context.Customers.Remove(customer);
-            }
-            
-            await _context.SaveChangesAsync();
+            await _customerRepository.Delete(id);
         }
         public bool Existance(string id)
         {
-            return _context.Customers.Any(e => e.Id == id);
+            return _customerRepository.Existance(id);
         }
 
         public async Task Add(Customer customer)
         {
-            _context.Customers.Add(customer);
-            
-            
-            await _context.SaveChangesAsync();
+            await _customerRepository.Add(customer);
             
         }
         public async Task Entry(string id, Customer customer)
         {
-            _context.Entry(customer).State = EntityState.Modified;
-            
-            await _context.SaveChangesAsync();
+            await _customerRepository.Entry(id, customer);
             
         }
     }

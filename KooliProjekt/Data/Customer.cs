@@ -8,8 +8,7 @@ namespace KooliProjekt.Data
     [ExcludeFromCodeCoverage]
     
     public class Customer : IdentityUser
-    {
-        
+    {        
         public string Name {get; set;}
         public string Phone {get; set;}
         public string Address {get; set;}
@@ -27,6 +26,5 @@ namespace KooliProjekt.Data
             Invoices = new List<Invoice>();
             Orders = new List<Order>();
         }
-
     }
 }

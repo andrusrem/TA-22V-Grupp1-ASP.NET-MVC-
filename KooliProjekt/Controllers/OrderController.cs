@@ -19,17 +19,15 @@ namespace KooliProjekt.Controllers
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
-        private readonly ApplicationDbContext _context;
         private readonly IImageService _imageService;
 
         public string Role { get; private set; }
 
-        public OrderController(ApplicationDbContext context, IImageService imageService, IOrderService orderService, IProductService productService, ICustomerService customerService)
+        public OrderController(IImageService imageService, IOrderService orderService, IProductService productService, ICustomerService customerService)
         {
             _orderService = orderService;
             _productService = productService;
             _customerService = customerService;
-            _context = context;
             _imageService = imageService;
         }
 
@@ -130,7 +128,7 @@ namespace KooliProjekt.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ProductId,EstimatedPrice,CustomerId")] Order order)
         {
             

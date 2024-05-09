@@ -2,14 +2,14 @@ using KooliProjekt.Data;
 using Microsoft.EntityFrameworkCore;
 namespace KooliProjekt.Data.Repositories
 {
-    public class InvoiceRepository : BaseRepository<Product>, IInvoiceRepository
+    public class InvoiceRepository : BaseRepository<Invoice>, IInvoiceRepository
     {
         public InvoiceRepository(ApplicationDbContext context) : base(context)
         {
             
         }
 
-        public async Task<PagedResult<Invoice>> List(int page, int pageSize)
+        public override async Task<PagedResult<Invoice>> List(int page, int pageSize)
         {
              var result = await Context.Invoices
                 .Include(i => i.Product)
@@ -28,7 +28,7 @@ namespace KooliProjekt.Data.Repositories
             return result;
         }
 
-        public async Task<Invoice> GetById(int id)
+        public override async Task<Invoice> GetById(int id)
         {
             var invoice = await Context.Invoices
                 .Include(i => i.Product)
@@ -37,17 +37,9 @@ namespace KooliProjekt.Data.Repositories
             return invoice;
         }
 
-        public async Task Save(Invoice invoice)
+        public override async Task Save(Invoice invoice)
         {
-            if(invoice.Id == 0)
-            {
-                Context.Add(invoice);
-            }
-            else
-            {
-                Context.Update(invoice);
-            }
-            await Context.SaveChangesAsync();
+            await base.Save(invoice);
         }
 
         public async Task<Invoice> FindId(int id)

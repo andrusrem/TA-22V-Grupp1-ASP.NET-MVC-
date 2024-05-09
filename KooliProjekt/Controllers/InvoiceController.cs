@@ -19,15 +19,13 @@ namespace KooliProjekt.Controllers
         private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
-        private readonly ApplicationDbContext _context;
 
-        public InvoiceController(ApplicationDbContext context, IOrderService orderService, IInvoiceService invoiceService, IProductService productService, ICustomerService customerService)
+        public InvoiceController(IOrderService orderService, IInvoiceService invoiceService, IProductService productService, ICustomerService customerService)
         {
             _invoiceService = invoiceService;
             _productService = productService;
             _customerService = customerService;
             _orderService = orderService;
-            _context = context;
         }
 
         // GET: Invoice
@@ -126,7 +124,7 @@ namespace KooliProjekt.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ProductId,WhenTaken,GivenBack,DistanceDriven,TotalPrice,PayBy,PayStatus,CustomerId")] Invoice invoice)
         {
             if (ModelState.IsValid)
