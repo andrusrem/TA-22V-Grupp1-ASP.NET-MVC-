@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 
 namespace KooliProjekt.Data
@@ -15,10 +16,12 @@ namespace KooliProjekt.Data
         public string City {get; set;}
         public string Postcode {get; set;}
         public string Country {get; set;}
-
+        [JsonIgnore]
         public IList<Invoice> Invoices {get; set;}
+        [JsonIgnore]
         public IList<Order> Orders {get; set;}
 
+        
         public Customer()
         {
             Invoices = new List<Invoice>();
