@@ -7,7 +7,6 @@ namespace KooliProjekt.Data
     [ExcludeFromCodeCoverage]
     public class Invoice : Entity
     {
-        public int Id {get; set;}
         public int ProductId {get;set;}
         public Product Product {get;set;}
         public DateTime? WhenTaken {get; set;}

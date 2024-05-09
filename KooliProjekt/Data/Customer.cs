@@ -6,7 +6,7 @@ namespace KooliProjekt.Data
 
     [ExcludeFromCodeCoverage]
     
-    public class Customer : IdentityUser
+    public class Customer : IdentityUser, IEntity
     {
         
         public string Name {get; set;}
@@ -19,11 +19,12 @@ namespace KooliProjekt.Data
         public IList<Invoice> Invoices {get; set;}
         public IList<Order> Orders {get; set;}
 
+        public bool IsNew { get { return string.IsNullOrEmpty(Id); } }
+
         public Customer()
         {
             Invoices = new List<Invoice>();
             Orders = new List<Order>();
         }
-
     }
 }

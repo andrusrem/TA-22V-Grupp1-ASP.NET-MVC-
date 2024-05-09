@@ -5,7 +5,6 @@ namespace KooliProjekt.Data
     [ExcludeFromCodeCoverage]
     public class Product : Entity
     {
-        public int Id {get; set;}
         public string Brand {get; set;}
         public string Model {get; set;}
         public string Manufacturer {get; set;}
@@ -21,7 +20,7 @@ namespace KooliProjekt.Data
         {
             get { return TimePrice + (DistancePrice * 100); }
         }
-        public string? ImageId {get;set;}
+        public string ImageId {get;set;}
         public Image Image {get;set;}
 
         //Taken By

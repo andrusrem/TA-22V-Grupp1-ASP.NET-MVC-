@@ -10,7 +10,7 @@ namespace KooliProjekt.Data.Repositories
             
         }
 
-        public async Task<PagedResult<Order>> List(int page, int pageSize)
+        public override async Task<PagedResult<Order>> List(int page, int pageSize)
         {
             var result = await Context.Orders
                 .Include(o => o.Product)
@@ -46,15 +46,7 @@ namespace KooliProjekt.Data.Repositories
 
         public async Task Save(Order order)
         {
-            if(order.Id == 0)
-            {
-                Context.Add(order);
-            }
-            else
-            {
-                Context.Update(order);
-            }
-            await Context.SaveChangesAsync();
+            await base.Save(order);
         }
 
         public async Task Delete(int? id)

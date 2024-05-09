@@ -68,7 +68,7 @@ namespace KooliProjekt.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,User")]
-        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product, IFormFile? image)
+        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product, IFormFile image)
         {
             if (!ModelState.IsValid)
             {       

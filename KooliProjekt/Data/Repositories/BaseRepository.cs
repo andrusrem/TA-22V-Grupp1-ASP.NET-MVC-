@@ -17,16 +17,16 @@ namespace KooliProjekt.Data.Repositories
         }
         
 
-        public virtual async Task<T> GetById(int id)
+        public virtual async Task<T> GetById(object id)
         {
             var result = await Context.Set<T>().FindAsync(id);
 
             return result;
         }
 
-        public virtual async Task Save(T entity)
+        public virtual async Task Save<U>(U entity) where U : IEntity
         {
-            if (entity.Id == 0)
+            if (entity.IsNew)
             {
                 await Context.AddAsync(entity);
             }
@@ -36,7 +36,7 @@ namespace KooliProjekt.Data.Repositories
             }
         }
 
-        public virtual async Task Delete(int id)
+        public virtual async Task Delete(object id)
         {
             var entity = await Context.Set<T>().FindAsync(id);
             if (entity != null)

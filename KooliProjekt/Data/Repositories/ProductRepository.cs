@@ -8,7 +8,7 @@ namespace KooliProjekt.Data.Repositories
         {
             
         }
-        public async Task<PagedResult<Product>> List(int page, int pageSize)
+        public override async Task<PagedResult<Product>> List(int page, int pageSize)
         {
             var result = await Context.Products.GetPagedAsync(page, pageSize);
             return result;
@@ -28,17 +28,7 @@ namespace KooliProjekt.Data.Repositories
 
         public async Task Save(Product product)
         {
-            if (product.Id == 0)
-            {
-                Context.Add(product);
-            }
-            else
-            {
-                Context.Update(product);
-            }
-
-            await Context.SaveChangesAsync();
-                    
+            await base.Save(product);
         }
 
         public async Task Delete(int Id)
