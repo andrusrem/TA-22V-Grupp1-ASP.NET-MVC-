@@ -19,15 +19,13 @@ namespace KooliProjekt.Controllers
         private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
-        private readonly ApplicationDbContext _context;
 
-        public InvoiceController(ApplicationDbContext context, IOrderService orderService, IInvoiceService invoiceService, IProductService productService, ICustomerService customerService)
+        public InvoiceController(IOrderService orderService, IInvoiceService invoiceService, IProductService productService, ICustomerService customerService)
         {
             _invoiceService = invoiceService;
             _productService = productService;
             _customerService = customerService;
             _orderService = orderService;
-            _context = context;
         }
 
         // GET: Invoice

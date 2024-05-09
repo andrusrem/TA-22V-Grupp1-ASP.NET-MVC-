@@ -18,20 +18,18 @@ namespace KooliProjekt.UnitTests.ControllerTests
         private readonly Mock<IOrderService> _orderService;
         private readonly Mock<IProductService> _productService;
         private readonly Mock<ICustomerService> _customerService;
-        private readonly ApplicationDbContext _context;
         private readonly Mock<IImageService> _imageService;
+
         public OrderControllerTests()
         {
             _orderService = new Mock<IOrderService>();
             _productService = new Mock<IProductService>();
             _customerService = new Mock<ICustomerService>();
-            _context = new ApplicationDbContext();
             _imageService = new Mock<IImageService>();
-            _controller = new OrderController(_context,
-                                                _imageService.Object, 
-                                                _orderService.Object, 
-                                                _productService.Object,
-                                                _customerService.Object);
+            _controller = new OrderController(_imageService.Object, 
+                                              _orderService.Object, 
+                                              _productService.Object,
+                                              _customerService.Object);
         }
 
         [Fact]
