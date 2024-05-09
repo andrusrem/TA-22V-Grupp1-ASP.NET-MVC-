@@ -9,12 +9,12 @@ namespace KooliProjekt.Services
     {
         private readonly ApplicationDbContext _context;
 
-        // public IActionResult Image(int id)
-        // {
-        //     var path = "/Users/andrusremets/TA-22V-Grupp1/KooliProjekt/Images/" + id + ".jpg";
-        //     var stream = System.IO.File.OpenRead(path);
-        //     return File(stream, "image/jpeg");
-        // }
+        //public IActionResult Image(int id)
+        //{
+        //    var path = "/Users/andrusremets/TA-22V-Grupp1/KooliProjekt/Images/" + id + ".jpg";
+        //    var stream = System.IO.File.OpenRead(path);
+        //    return File(stream, "image/jpeg");
+        //}
 
         public string GetImagesDir()
         {

@@ -19,19 +19,19 @@ namespace KooliProjekt.Data.Repositories
         {
             return await Context.Products.ToListAsync();
         }
-        public async Task<Product> GetById(int Id)
+        public override async Task<Product> GetById(int Id)
         {
             var product = await Context.Products
                 .FirstOrDefaultAsync(m => m.Id == Id);
             return product;
         }
 
-        public async Task Save(Product product)
+        public override async Task Save(Product product)
         {
             await base.Save(product);
         }
 
-        public async Task Delete(int Id)
+        public override async Task Delete(int Id)
         {
             var product = await Context.Products.FindAsync(Id);
             if(product != null)

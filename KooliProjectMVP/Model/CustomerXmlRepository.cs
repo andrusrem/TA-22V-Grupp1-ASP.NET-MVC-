@@ -37,7 +37,7 @@ namespace WinFormsMVP.Model
             });
         }
 
-        private async void CreateCustomerXmlStub()
+        private void CreateCustomerXmlStub()
         {
             var stubCustomerList = new List<Customer> {
                 new Customer {Name = "Joe", Address = "Nowhere, TX 1023", Phone = "123-456"},

@@ -34,7 +34,7 @@ namespace KooliProjekt.Data.Repositories
         }
         
 
-        public async Task<Order> GetById(int id)
+        public override async Task<Order> GetById(int id)
         {
             var order = await Context.Orders
                 .Include(o => o.Product)
@@ -44,7 +44,7 @@ namespace KooliProjekt.Data.Repositories
             return order;
         }
 
-        public async Task Save(Order order)
+        public override async Task Save(Order order)
         {
             await base.Save(order);
         }

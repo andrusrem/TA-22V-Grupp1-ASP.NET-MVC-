@@ -28,7 +28,7 @@ namespace KooliProjekt.Data.Repositories
             return result;
         }
 
-        public async Task<Invoice> GetById(int id)
+        public override async Task<Invoice> GetById(int id)
         {
             var invoice = await Context.Invoices
                 .Include(i => i.Product)
@@ -37,7 +37,7 @@ namespace KooliProjekt.Data.Repositories
             return invoice;
         }
 
-        public async Task Save(Invoice invoice)
+        public override async Task Save(Invoice invoice)
         {
             await base.Save(invoice);
         }
