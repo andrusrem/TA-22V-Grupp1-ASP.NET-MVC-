@@ -100,6 +100,50 @@ namespace KooliProjekt.UnitTests.ServiceTests
             //Arrange
             string id = "1";
             var customer = new Customer { Id = "1" };
+            _mockRepository.Setup(u => u.Existance(id)).Returns(true);
+            //Act
+            var result = _service.Existance(id);
+            //Assert
+            Assert.True(result);
+        }
+        [Fact]
+        public void Existance_return_false()
+        {
+            //Arrange
+            string id = "1";
+            Customer customer = null;
+            _mockRepository.Setup(u => u.Existance(id)).Returns(false);
+            //Act
+            var result = _service.Existance(id); 
+            //Assert
+            Assert.False(result);
+        }
+        [Fact]
+        public void Add_add_new_customer()
+        {
+            //Arrange
+            string Id = "1";
+            var customer = new Customer();
+            customer.Id = Id;
+            _mockRepository.Setup(u => u.Add(customer)).Verifiable();
+            //Act
+            var result = _service.Add(customer);
+            //Assert
+            Assert.NotNull(result);
+
+        }
+        [Fact]
+        public void Entry_make_entry()
+        {
+            //Arrange
+            string id = "1";
+            var customer = new Customer { Id = id, Email = "a@.com"};
+            customer.Email = "andrus@g.com";
+            _mockRepository.Setup(u => u.Entry(id, customer)).Verifiable();
+            //Act
+            var result = _service.Entry(id,customer);
+            //Arrange
+            Assert.NotNull(result);
         }
     }
 }
