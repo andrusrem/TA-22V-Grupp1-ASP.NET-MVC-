@@ -56,6 +56,7 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Product/Create
+        [HttpGet("create")]
         [Authorize(Roles = "Admin,User")]
         public IActionResult Create()
         {
@@ -70,6 +71,8 @@ namespace KooliProjekt.Controllers
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Create([Bind("Id,Brand,Model,Manufacturer,CarNum,CarType,DistancePrice,TimePrice")] Product product, IFormFile image)
         {
+            
+
             if (!ModelState.IsValid)
             {       
                 return View(product);
@@ -78,7 +81,7 @@ namespace KooliProjekt.Controllers
             await _productService.Save(product);
 
 
-            using(var stream = image.OpenReadStream())
+            using (var stream = image.OpenReadStream())
             {
                 await _imageService.WriteImage(product.Id, stream);
             }

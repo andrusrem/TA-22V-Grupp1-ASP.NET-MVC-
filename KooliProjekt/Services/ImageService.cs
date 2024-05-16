@@ -33,7 +33,13 @@ namespace KooliProjekt.Services
 
         public async Task WriteImage(int Id, System.IO.Stream stream)
         {
-            using(var fileStream = new FileStream(GetImagePath(Id), FileMode.CreateNew))
+            var dir = GetImagesDir();
+            if(!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            using (var fileStream = new FileStream(GetImagePath(Id), FileMode.CreateNew))
             {
                 await stream.CopyToAsync(fileStream);
             }

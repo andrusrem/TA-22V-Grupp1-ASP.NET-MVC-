@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net.Http.Json;
 using System.Globalization;
+using System.Text.Json;
 
 namespace KooliProjekt.IntegrationTests
 {
@@ -83,8 +84,9 @@ namespace KooliProjekt.IntegrationTests
             {
                 await dbContext.AddAsync(customer);
                 await dbContext.SaveChangesAsync();
-
-                var productS = JsonContent.Create(product);
+                var options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+                var productS = JsonContent.Create(product, null, options);
                 using var memoryStream = new MemoryStream();
                 memoryStream.WriteByte(65);
                 memoryStream.WriteByte(66);
@@ -92,9 +94,9 @@ namespace KooliProjekt.IntegrationTests
 
                 using var streamContent = new StreamContent(memoryStream);
 
-                using var fileUploadContent = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString(CultureInfo.InvariantCulture));
-                fileUploadContent.Add(productS);
-                fileUploadContent.Add(streamContent);
+                using var fileUploadContent = new MultipartFormDataContent("Upload----" + DateTime.Now.Ticks);
+                fileUploadContent.Add(productS, "product");
+                fileUploadContent.Add(streamContent, "image","image.png");
                 var client = Factory.CreateClient();
                 //Act
                 result = await client.PostAsync(url, fileUploadContent);
@@ -111,7 +113,7 @@ namespace KooliProjekt.IntegrationTests
                 //Act
                 result = await client.PostAsync(url, data);
             }
-            else if(testNum == 3)
+            else if (testNum == 3)
             {
                 await dbContext.AddAsync(customer);
                 await dbContext.SaveChangesAsync();
@@ -125,35 +127,13 @@ namespace KooliProjekt.IntegrationTests
                 result = await client.PostAsync(url, data);
             }
 
-          
 
-            
+
+
             //Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
 
-            }
-            else if(testNum == 2)
-            {
-                await dbContext.AddAsync(customer);
-                await dbContext.SaveChangesAsync();
-                await dbContext.AddAsync(product);
-                await dbContext.SaveChangesAsync();
-                _orderController.Create(order);
-                data = new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8, "application/json");
-            }
-            else if(testNum == 3)
-            {
-                await dbContext.AddAsync(customer);
-                await dbContext.SaveChangesAsync();
-                _productController.Create(product, image:null);
-                data = new StringContent(JsonConvert.SerializeObject(product), Encoding.UTF8, "application/json");
-            }
-            var client = Factory.CreateClient();
-            //Act
-            var result = await client.PostAsync(url, data);
-            //Assert
-            Assert.Equal(HttpStatusCode.Created, result.StatusCode);
-        }
     }
 }
+
