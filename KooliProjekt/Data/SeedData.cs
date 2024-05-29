@@ -95,7 +95,7 @@ namespace KooliProjekt.Data
         private static async void AddRole(UserManager<Customer> userManager, ApplicationDbContext context)
         {
             var user = context.Customers.Where(u => u.Email == "admin@admin.com").FirstOrDefault();
-           await userManager.AddToRoleAsync(user, "Admin");
+            await userManager.AddToRoleAsync(user, "Admin");
         
         }
         

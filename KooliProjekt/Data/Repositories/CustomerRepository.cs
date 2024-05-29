@@ -37,13 +37,13 @@ namespace KooliProjekt.Data.Repositories
             customerDb.City = entity.City;
             customerDb.Postcode = entity.Postcode;
             customerDb.Country = entity.Country;
-            if (string.IsNullOrEmpty(entity.Id))
+            if (id==null)
             {
-                await Context.AddAsync(entity);
+                await Context.AddAsync(customerDb);
             }
             else
             {
-                Context.Update(entity);
+                Context.Update(customerDb);
             }
             await Context.SaveChangesAsync();
         }
