@@ -13,7 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsMVP", "KooliProject
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsMVP.UnitTests", "WinFormsMVP.UnitTests\WinFormsMVP.UnitTests.csproj", "{94D03B16-436E-4F7A-AE5A-4F77D7C8AFD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KooliProjektMVVP", "KooliProjektMVVP\KooliProjektMVVP.csproj", "{5C5B15A0-93D4-4A55-98F6-AA7C3605E07F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KooliProjektMVVP", "KooliProjektMVVP\KooliProjektMVVP.csproj", "{5C5B15A0-93D4-4A55-98F6-AA7C3605E07F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KooliProjektMVVM.UnitTests", "KooliProjektMVVM.UnitTests\KooliProjektMVVM.UnitTests.csproj", "{6AC8C311-DD19-4D96-9144-652C1AE90B4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,14 @@ Global
 		{5C5B15A0-93D4-4A55-98F6-AA7C3605E07F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5C5B15A0-93D4-4A55-98F6-AA7C3605E07F}.Release|x86.ActiveCfg = Release|Any CPU
 		{5C5B15A0-93D4-4A55-98F6-AA7C3605E07F}.Release|x86.Build.0 = Release|Any CPU
+		{6AC8C311-DD19-4D96-9144-652C1AE90B4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AC8C311-DD19-4D96-9144-652C1AE90B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AC8C311-DD19-4D96-9144-652C1AE90B4B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6AC8C311-DD19-4D96-9144-652C1AE90B4B}.Debug|x86.Build.0 = Debug|Any CPU
+		{6AC8C311-DD19-4D96-9144-652C1AE90B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AC8C311-DD19-4D96-9144-652C1AE90B4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AC8C311-DD19-4D96-9144-652C1AE90B4B}.Release|x86.ActiveCfg = Release|Any CPU
+		{6AC8C311-DD19-4D96-9144-652C1AE90B4B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

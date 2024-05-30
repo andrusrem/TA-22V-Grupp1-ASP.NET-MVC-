@@ -10,7 +10,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using KooliProjektMVVP.ApiClient;
 
-namespace ToDoApplicationMVVM
+namespace KooliProjektMVVP
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

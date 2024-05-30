@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace ToDoApplicationMVVM
+namespace KooliProjektMVVP
 {
     public class RelayCommand : ICommand
     {

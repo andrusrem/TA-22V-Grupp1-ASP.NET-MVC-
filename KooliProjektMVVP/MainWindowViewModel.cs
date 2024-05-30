@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using KooliProjektMVVP.ApiClient;
 
-namespace ToDoApplicationMVVM
+namespace KooliProjektMVVP
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
